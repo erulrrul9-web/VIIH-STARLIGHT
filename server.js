@@ -1,22 +1,11 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const path = require('path');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-// Menghubungkan direktori kerja Vercel ke folder public
-const publicDir = path.join(process.cwd(), 'public');
-
-app.use(express.static(publicDir));
-
-// Route utama mengembalikan file index.html
-app.get('/', (req, res) => {
-    res.sendFile(path.join(publicDir, 'index.html'));
-});
 
 // ====== FAKEFF ======
 app.get('/api/fakeff', async (req, res) => {
@@ -85,10 +74,4 @@ app.get('/api/fakeffduo', async (req, res) => {
     }
 });
 
-// Fallback untuk route selain API
-app.get('*', (req, res) => {
-    res.sendFile(path.join(publicDir, 'index.html'));
-});
-
-// Export app langsung untuk Vercel
 module.exports = app;
