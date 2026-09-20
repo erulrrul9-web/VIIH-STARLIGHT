@@ -8,12 +8,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serving file statis dari folder public
-app.use(express.static(path.join(__dirname, 'public')));
+// Menghubungkan direktori kerja Vercel ke folder public
+const publicDir = path.join(process.cwd(), 'public');
 
-// Route utama untuk nampilin index.html
+app.use(express.static(publicDir));
+
+// Route utama mengembalikan file index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(publicDir, 'index.html'));
 });
 
 // ====== FAKEFF ======
@@ -83,18 +85,10 @@ app.get('/api/fakeffduo', async (req, res) => {
     }
 });
 
-// Fallback jika route lain diakses
+// Fallback untuk route selain API
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(publicDir, 'index.html'));
 });
 
-// Menjalankan server lokal (jika bukan Vercel)
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-        console.log(`🔥 vii-h-starlight Cyber Portal jalan di http://localhost:${PORT}`);
-    });
-}
-
-// Export module wajib untuk Vercel
+// Export app langsung untuk Vercel
 module.exports = app;
