@@ -1,11 +1,21 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Serving file statis dari folder public (untuk menampilkan index.html dan aset web)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Route utama untuk mengarahkan ke index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // ====== FAKEFF ======
 app.get('/api/fakeff', async (req, res) => {
@@ -74,4 +84,12 @@ app.get('/api/fakeffduo', async (req, res) => {
     }
 });
 
-module.exports = app;
+// Fallback jika ada URL lain diakses
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Menjalankan server agar terbaca dengan baik di Render
+app.listen(PORT, () => {
+    console.log(`🔥 Server jalan di port ${PORT}`);
+});
