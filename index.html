@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VII H STARLIGHT.net - Cyber Portal & Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+    body {
+      background-color: #000; color: #00ff66; min-height: 100vh;
+      display: flex; justify-content: center; align-items: center;
+      overflow-x: hidden; position: relative;
+    }
+    #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+    .container {
+      position: relative; z-index: 2; display: flex; width: 850px;
+      max-width: 95%; min-height: 480px;
+      background: rgba(5, 15, 5, 0.92);
+      border: 1px solid #00ff66; border-radius: 15px;
+      box-shadow: 0 0 25px #00ff6644; backdrop-filter: blur(5px);
+      overflow: hidden; margin: 20px 0;
+    }
+    .hidden { display: none !important; }
+
+    /* Login */
+    .login-section { flex: 1.2; padding: 35px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid rgba(0,255,102,0.3); }
+    .logo h1 { font-size: 30px; color: #00ff66; text-shadow: 0 0 10px #00ff66; }
+    .logo p { font-size: 12px; color: #88ffaa; margin-bottom: 20px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-size: 12px; margin-bottom: 5px; }
+    .input-field { display: flex; align-items: center; background: rgba(0,30,0,0.7); border: 1px solid #00ff66; border-radius: 5px; padding: 10px; }
+    .input-field i { color: #00ff66; margin-right: 10px; }
+    .input-field input { background: transparent; border: none; outline: none; color: #fff; width: 100%; }
+    .login-btn {
+      width: 100%; padding: 12px; background: #00ff66; color: #000;
+      border: none; border-radius: 5px; font-weight: bold; font-size: 14px;
+      cursor: pointer; box-shadow: 0 0 15px #00ff66; transition: 0.3s; margin-top: 10px;
+    }
+    .login-btn:hover { background: #33ff88; box-shadow: 0 0 25px #00ff66; }
+
+    /* Biometric */
+    .biometric-section {
+      flex: 1; padding: 35px 20px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      background: rgba(0,20,0,0.5);
+    }
+    .fingerprint-container {
+      width: 100px; height: 100px; border-radius: 50%; border: 2px solid #00ff66;
+      display: flex; align-items: center; justify-content: center;
+      margin: 20px 0; cursor: pointer; box-shadow: 0 0 15px #00ff66; transition: 0.3s;
+    }
+    .fingerprint-container:hover { transform: scale(1.05); }
+    .fingerprint-scan i { font-size: 50px; color: #00ff66; }
+
+    /* Overlay */
+    .hack-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95); z-index: 999;
+      display: flex; justify-content: center; align-items: center;
+    }
+    .hack-content { text-align: center; width: 320px; }
+    .spinner {
+      width: 50px; height: 50px; border: 4px solid #003311;
+      border-top: 4px solid #00ff66; border-radius: 50%;
+      margin: 0 auto 20px; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .progress-bar {
+      width: 100%; height: 10px; background: #003311;
+      border: 1px solid #00ff66; border-radius: 5px;
+      margin-top: 15px; overflow: hidden;
+    }
+    .progress-fill {
+      width: 0%; height: 100%; background: #00ff66;
+      box-shadow: 0 0 10px #00ff66; transition: width 0.1s linear;
+    }
+
+    /* Dashboard */
+    .dashboard { flex-direction: column; padding: 30px; }
+    .dashboard-header { border-bottom: 1px solid #00ff6644; padding-bottom: 15px; margin-bottom: 20px; }
+    .dashboard-header h2 { font-size: 18px; }
+    .dashboard-header p { font-size: 12px; color: #88ffaa; margin-top: 5px; }
+
+    .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
+    .tool-card {
+      padding: 20px; border: 1px solid #00ff66; border-radius: 8px;
+      background: rgba(0,30,0,0.6); text-align: center; transition: 0.3s;
+    }
+    .tool-card:hover { box-shadow: 0 0 15px #00ff66; }
+    .tool-card i { font-size: 32px; margin-bottom: 10px; }
+    .tool-card h3 { font-size: 15px; margin-bottom: 8px; }
+    .tool-card p { font-size: 11px; color: #88ffaa; margin-bottom: 15px; }
+    .tool-btn {
+      padding: 8px 15px; background: transparent; color: #00ff66;
+      border: 1px solid #00ff66; border-radius: 4px;
+      cursor: pointer; font-weight: bold; font-size: 11px;
+    }
+    .tool-btn:hover { background: #00ff66; color: #000; }
+    .logout-btn {
+      width: 100%; padding: 12px; background: #ff3366; color: #fff;
+      border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;
+    }
+    .modal-box {
+      width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+      background: rgba(5, 20, 5, 0.98);
+      border: 1px solid #00ff66; border-radius: 12px;
+      box-shadow: 0 0 30px #00ff6644; padding: 25px;
+    }
+    .modal-box h3 {
+      color: #00ff66; font-size: 18px; margin-bottom: 15px;
+      text-shadow: 0 0 10px #00ff66; border-bottom: 1px solid #00ff6644;
+      padding-bottom: 10px;
+    }
+    .modal-box input, .modal-box textarea {
+      width: 100%; padding: 10px; margin: 6px 0;
+      background: rgba(0,30,0,0.7); border: 1px solid #00ff66;
+      border-radius: 5px; color: #fff; font-family: 'Courier New', monospace;
+      font-size: 13px; outline: none;
+    }
+    .modal-box input::placeholder, .modal-box textarea::placeholder { color: #3a6a3a; }
+    .modal-box input:focus, .modal-box textarea:focus { box-shadow: 0 0 10px #00ff6688; }
+    .modal-box button {
+      padding: 10px 20px; background: #00ff66; color: #000;
+      border: none; border-radius: 5px; font-weight: bold;
+      cursor: pointer; margin-top: 8px; font-size: 12px; transition: 0.3s;
+    }
+    .modal-box button:hover { background: #33ff88; box-shadow: 0 0 15px #00ff66; }
+    .modal-box button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .modal-close {
+      float: right; background: transparent !important; color: #ff3366 !important;
+      border: 1px solid #ff3366 !important; padding: 5px 12px !important;
+      font-size: 12px !important; margin-top: 0 !important;
+    }
+    .modal-close:hover { background: #ff3366 !important; color: #fff !important; }
+    .output-area {
+      margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.6);
+      border: 1px dashed #00ff6655; border-radius: 8px;
+      min-height: 40px; font-size: 12px; text-align: center; word-break: break-word;
+    }
+    .output-area img {
+      max-width: 100%; border-radius: 6px; margin-top: 8px;
+      box-shadow: 0 0 20px #00ff6644;
+    }
+    .err { color: #ff3366; font-weight: bold; }
+    .ok { color: #00ff66; font-weight: bold; }
+
+    /* Tebak Gambar */
+    .tebak-img {
+      width: 100%; max-width: 280px; height: 200px;
+      background: rgba(0,30,0,0.7); border: 1px solid #00ff66;
+      border-radius: 8px; margin: 10px auto;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 60px; box-shadow: 0 0 15px #00ff6644;
+      animation: popIn 0.4s ease;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .tebak-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+    .tebak-opt {
+      padding: 10px; background: rgba(0,30,0,0.6);
+      border: 1px solid #00ff66; color: #00ff66;
+      border-radius: 6px; cursor: pointer;
+      font-weight: bold; font-size: 12px; transition: 0.2s;
+    }
+    .tebak-opt:hover { background: #00ff6622; }
+    .tebak-opt.correct { background: #00ff66; color: #000; }
+    .tebak-opt.wrong { background: #ff3366; color: #fff; border-color: #ff3366; }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .login-section { border-right: none; border-bottom: 1px solid rgba(0,255,102,0.3); }
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- Overlay Loading -->
+  <div id="hackOverlay" class="hack-overlay hidden">
+    <div class="hack-content">
+      <div class="spinner"></div>
+      <h2 id="hackStatus">AUTHENTICATING...</h2>
+      <p style="font-size:11px;color:#88ffaa;">SENDING ACCESS VERIFICATION TO WHATSAPP...</p>
+      <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- Login -->
+  <div id="loginScreen" class="container">
+    <div class="login-section">
+      <div class="logo">
+        <h1>VII H STARLIGHT.net</h1>
+        <p>Your Security Portal</p>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Username / ID</label>
+          <div class="input-field">
+            <i class="fas fa-user-shield"></i>
+            <input type="text" id="username" placeholder="Masukkan username" required autocomplete="off">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-field">
+            <i class="fas fa-key"></i>
+            <input type="password" id="password" placeholder="Masukkan password" required>
+          </div>
+        </div>
+        <button type="submit" class="login-btn"><i class="fab fa-whatsapp"></i> LOGIN VIA WHATSAPP</button>
+      </form>
+    </div>
+    <div class="biometric-section">
+      <h2>Biometric Login</h2>
+      <p style="font-size:12px;color:#88ffaa;">Quick access via fingerprint</p>
+      <div class="fingerprint-container" id="fingerprintBtn">
+        <div class="fingerprint-scan"><i class="fas fa-fingerprint"></i></div>
+      </div>
+      <p style="font-size:11px;">Touch to authenticate</p>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboardScreen" class="container dashboard hidden">
+    <div class="dashboard-header">
+      <h2><i class="fas fa-terminal"></i> VII H STARLIGHT CYBER TOOLS DASHBOARD</h2>
+      <p>Status: <span style="color:#00ff66;font-weight:bold;">SYSTEM ONLINE</span></p>
+    </div>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <i class="fas fa-network-wired"></i>
+        <h3>Cek IP Saya</h3>
+        <p>Pemindaian IP publik & info ISP langsung.</p>
+        <button class="tool-btn" onclick="checkMyIP()">JALANKAN IP SCAN</button>
+      </div>
+
+      <div class="tool-card">
+        <i class="fas fa-code"></i>
+        <h3>Base64 Converter</h3>
+        <p>Ubah teks menjadi kode rahasia Base64.</p>
+        <button class="tool-btn" onclick="encodeText()">ENCODE TEKS</button>
+      </div>
+
+      <div class="tool-card">
+        <i class="fas fa-mask"></i>
+        <h3>FakeFF</h3>
+        <p>Bikin fake chat Free Fire satu orang.</p>
+        <button class="tool-btn" onclick="openModal('fakeff')">BUKA TOOL</button>
+      </div>
+
+      <div class="tool-card">
+        <i class="fas fa-users"></i>
+        <h3>FakeFF Duo</h3>
+        <p>Bikin fake chat Free Fire dua orang.</p>
+        <button class="tool-btn" onclick="openModal('fakeffduo')">BUKA TOOL</button>
+      </div>
+
+      <div class="tool-card">
+        <i class="fas fa-mobile-screen"></i>
+        <h3>IQC Generator</h3>
+        <p>Bikin quote iPhone palsu yang aesthetic.</p>
+        <button class="tool-btn" onclick="openModal('iqc')">BUKA TOOL</button>
+      </div>
+
+      <div class="tool-card">
+        <i class="fas fa-image"></i>
+        <h3>Tebak Gambar</h3>
+        <p>Kuis tebak gambar, soal selalu ganti.</p>
+        <button class="tool-btn" onclick="openModal('tebak')">MULAI GAME</button>
+      </div>
+    </div>
+
+    <button id="logoutBtn" class="logout-btn">LOGOUT / KELUAR</button>
+  </div>
+
+  <div id="modalContainer"></div>
+
+  <script>
+    // ====== KONFIGURASI ======
+    const WA_NUMBER = "628818691107"; // ganti nomor WA lo
+
+    // ====== MATRIX RAIN ======
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const characters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*';
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array.from({ length: columns }).fill(1);
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0,0,0,0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00ff66';
+      ctx.font = `${fontSize}px monospace`;
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 33);
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // ====== ANIMASI LOADING ======
+    function runHackingAnimation(onComplete) {
+      const overlay = document.getElementById('hackOverlay');
+      const progressFill = document.getElementById('progressFill');
+      overlay.classList.remove('hidden');
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 2;
+        progressFill.style.width = `${progress}%`;
+        if (progress >= 100) {
+          clearInterval(interval);
+          overlay.classList.add('hidden');
+          if (onComplete) onComplete();
+        }
+      }, 40);
+    }
+
+    // ====== LOGIN ======
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const msg = `*AKSES LOGIN VII H STARLIGHT.net*%0A👤 *User:* ${user}%0A🔑 *Pass:* ${pass}`;
+      window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+      runHackingAnimation(() => {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.remove('hidden');
+      });
+    });
+
+    document.getElementById('fingerprintBtn').addEventListener('click', () => {
+      runHackingAnimation(() => {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.remove('hidden');
+      });
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      document.getElementById('dashboardScreen').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+    });
+
+    // ====== TOOLS DASAR ======
+    async function checkMyIP() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        alert(`🌐 HASIL PEMINDAIAN IP:\n\nIP Publik: ${data.ip}\nKota: ${data.city}\nWilayah: ${data.region}\nISP: ${data.org}`);
+      } catch { alert('Gagal mengambil data IP.'); }
+    }
+    function encodeText() {
+      const input = prompt("Masukkan teks yang ingin di-encode:");
+      if (input) alert(`🔒 HASIL ENCODE:\n\n${btoa(input)}`);
+    }
+
+    // ====== MODAL SYSTEM ======
+    const modalContainer = document.getElementById('modalContainer');
+    function closeModal() { modalContainer.innerHTML = ''; }
+
+    function openModal(type) {
+      let html = '';
+      if (type === 'fakeff') html = modalFakeFF();
+      if (type === 'fakeffduo') html = modalFakeFFDuo();
+      if (type === 'iqc') html = modalIQC();
+      if (type === 'tebak') html = modalTebak();
+      modalContainer.innerHTML = html;
+      if (type === 'tebak') setTimeout(nextTebak, 100);
+    }
+
+    // ====== FAKEFF ======
+    function modalFakeFF() {
+      return `
+        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+          <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+            <h3><i class="fas fa-mask"></i> FAKEFF</h3>
+            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Masukkan nickname, hasil bakal muncul di bawah.</p>
+            <input type="text" id="ff-nick" placeholder="Contoh: Rulss">
+            <button id="ff-btn" onclick="generateFakeFF()">GENERATE</button>
+            <div id="ff-output" class="output-area"></div>
+          </div>
+        </div>`;
+    }
+    async function generateFakeFF() {
+      const nick = document.getElementById('ff-nick').value.trim();
+      const out = document.getElementById('ff-output');
+      const btn = document.getElementById('ff-btn');
+      if (!nick) { out.innerHTML = '<span class="err">Nickname wajib diisi!</span>'; return; }
+      out.innerHTML = '<span style="color:#00ffff;">⏳ Lagi generate...</span>';
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/fakeff?nickname=${encodeURIComponent(nick)}`);
+        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error || `HTTP ${res.status}`); }
+        const blob = await res.blob();
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${URL.createObjectURL(blob)}">`;
+      } catch (e) {
+        out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`;
+      } finally { btn.disabled = false; }
+    }
+
+    // ====== FAKEFF DUO ======
+    function modalFakeFFDuo() {
+      return `
+        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+          <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+            <h3><i class="fas fa-users"></i> FAKEFF DUO</h3>
+            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Format: Username1|Username2</p>
+            <input type="text" id="duo-input" placeholder="Contoh: Rulss|Modders">
+            <button id="duo-btn" onclick="generateFakeFFDuo()">GENERATE</button>
+            <div id="duo-output" class="output-area"></div>
+          </div>
+        </div>`;
+    }
+    async function generateFakeFFDuo() {
+      const input = document.getElementById('duo-input').value.trim();
+      const out = document.getElementById('duo-output');
+      const btn = document.getElementById('duo-btn');
+      const [u1, u2] = input.split('|').map(v => v.trim());
+      if (!u1 || !u2) { out.innerHTML = '<span class="err">Format: Username1|Username2</span>'; return; }
+      out.innerHTML = '<span style="color:#00ffff;">⏳ Lagi generate...</span>';
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/fakeffduo?username1=${encodeURIComponent(u1)}&username2=${encodeURIComponent(u2)}`);
+        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error || `HTTP ${res.status}`); }
+        const blob = await res.blob();
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${URL.createObjectURL(blob)}">`;
+      } catch (e) {
+        out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`;
+      } finally { btn.disabled = false; }
+    }
+
+    // ====== IQC ======
+    function modalIQC() {
+      return `
+        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+          <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+            <h3><i class="fas fa-mobile-screen"></i> IQC GENERATOR</h3>
+            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Bikin quote aesthetic ala iPhone lock screen.</p>
+            <input type="text" id="iqc-text" placeholder="Tulis quote lo di sini..." maxlength="80">
+            <input type="text" id="iqc-time" placeholder="Waktu (opsional)" value="09:41">
+            <button onclick="generateIQC()">GENERATE QUOTE</button>
+            <div id="iqc-output" class="output-area"></div>
+          </div>
+        </div>`;
+    }
+    function generateIQC() {
+      const text = document.getElementById('iqc-text').value.trim() || 'Stay hungry, stay foolish.';
+      const time = document.getElementById('iqc-time').value.trim() || '09:41';
+      const out = document.getElementById('iqc-output');
+      out.innerHTML = `
+        <div style="
+          background: linear-gradient(145deg, #1a1a2e, #16213e, #0f3460);
+          border-radius: 22px; padding: 30px 20px 25px; color: #fff;
+          font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+          border: 6px solid #0a0a0a; min-height: 220px;
+          display: flex; flex-direction: column; justify-content: space-between;
+          animation: popIn 0.4s ease;
+        ">
+          <div style="display:flex;justify-content:space-between;font-size:12px;opacity:0.9;">
+            <span>${time}</span><span>🔋 100%</span>
+          </div>
+          <div style="font-size:28px;font-weight:700;line-height:1.3;text-align:center;padding:15px 5px;text-shadow:0 2px 10px rgba(0,0,0,0.5);">
+            ${escapeHtml(text)}
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;opacity:0.7;">
+            <span>Slide to unlock</span><span>📷</span>
+          </div>
+        </div>`;
+    }
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    // ====== TEBAK GAMBAR ======
+    const tebakBank = [
+      { emoji: '🍎', jawaban: 'Apel', opsi: ['Apel', 'Jeruk', 'Mangga', 'Anggur'] },
+      { emoji: '🐘', jawaban: 'Gajah', opsi: ['Gajah', 'Badak', 'Kerbau', 'Sapi'] },
+      { emoji: '🌋', jawaban: 'Gunung Meletus', opsi: ['Gunung Meletus', 'Pantai', 'Air Terjun', 'Hutan'] },
+      { emoji: '🚀', jawaban: 'Roket', opsi: ['Roket', 'Pesawat', 'Helikopter', 'Balon Udara'] },
+      { emoji: '🐍', jawaban: 'Ular', opsi: ['Ular', 'Cacing', 'Kadal', 'Buaya'] },
+      { emoji: '🌈', jawaban: 'Pelangi', opsi: ['Pelangi', 'Awan', 'Petir', 'Hujan'] },
+      { emoji: '🐧', jawaban: 'Penguin', opsi: ['Penguin', 'Bebek', 'Angsa', 'Ayam'] },
+      { emoji: '🍕', jawaban: 'Pizza', opsi: ['Pizza', 'Burger', 'Hotdog', 'Sandwich'] },
+      { emoji: '⚽', jawaban: 'Bola Sepak', opsi: ['Bola Sepak', 'Bola Basket', 'Bola Voli', 'Bola Bowling'] },
+      { emoji: '🦁', jawaban: 'Singa', opsi: ['Singa', 'Harimau', 'Macan', 'Cheetah'] },
+      { emoji: '🌙', jawaban: 'Bulan', opsi: ['Bulan', 'Matahari', 'Bintang', 'Planet'] },
+      { emoji: '🎸', jawaban: 'Gitar', opsi: ['Gitar', 'Biola', 'Piano', 'Drum'] }
+    ];
+    let tebakCurrent = null, tebakSkor = 0, tebakTotal = 0;
+
+    function modalTebak() {
+      return `
+        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+          <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+            <h3><i class="fas fa-image"></i> TEBAK GAMBAR</h3>
+            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Skor: <b id="tebak-skor">0</b> / <b id="tebak-total">0</b></p>
+            <div id="tebak-img" class="tebak-img">?</div>
+            <div id="tebak-options" class="tebak-options"></div>
+            <div id="tebak-output" class="output-area" style="text-align:center;">Pilih jawaban di atas!</div>
+            <button onclick="nextTebak()" style="width:100%;margin-top:10px;">SOAL BERIKUTNYA ➡</button>
+          </div>
+        </div>`;
+    }
+
+    function nextTebak() {
+      const pick = tebakBank[Math.floor(Math.random() * tebakBank.length)];
+      tebakCurrent = pick;
+      tebakTotal++;
+      document.getElementById('tebak-skor').innerText = tebakSkor;
+      document.getElementById('tebak-total').innerText = tebakTotal;
+      const imgBox = document.getElementById('tebak-img');
+      imgBox.style.animation = 'none';
+      void imgBox.offsetWidth;
+      imgBox.style.animation = 'popIn 0.4s ease';
+      imgBox.innerText = pick.emoji;
+      const opts = [...pick.opsi].sort(() => Math.random() - 0.5);
+      const container = document.getElementById('tebak-options');
+      container.innerHTML = opts.map(o => `<button class="tebak-opt" onclick="jawabTebak('${o.replace(/'/g,"\\'")}')">${o}</button>`).join('');
+      document.getElementById('tebak-output').innerHTML = 'Pilih jawaban di atas!';
+    }
+
+    function jawabTebak(pilihan) {
+      if (!tebakCurrent) return;
+      const buttons = document.querySelectorAll('.tebak-opt');
+      buttons.forEach(b => {
+        if (b.innerText === tebakCurrent.jawaban) b.classList.add('correct');
+        else if (b.innerText === pilihan) b.classList.add('wrong');
+        b.disabled = true;
+      });
+      if (pilihan === tebakCurrent.jawaban) {
+        tebakSkor++;
+        document.getElementById('tebak-output').innerHTML = '<span class="ok">✔ Bener!</span>';
+      } else {
+        document.getElementById('tebak-output').innerHTML = `<span class="err">✘ Salah! Jawaban: ${tebakCurrent.jawaban}</span>`;
+      }
+      document.getElementById('tebak-skor').innerText = tebakSkor;
+      document.getElementById('tebak-total').innerText = tebakTotal;
+    }
+  </script>
+</body>
+</html>
