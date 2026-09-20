@@ -1,7 +1,6 @@
 {
-  "name": "VII H STARLIGHT-cyber-tools",
+  "name": "viih-starlight",
   "version": "1.0.0",
-  "description": "VII H STARLIGHT Cyber Portal & Tools",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
