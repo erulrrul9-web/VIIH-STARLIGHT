@@ -11,7 +11,7 @@
     body {
       background-color: #030a05; color: #00ff66; min-height: 100vh;
       display: flex; justify-content: center; align-items: center;
-      overflow-x: hidden; position: relative; cursor: crosshair;
+      overflow: hidden; position: relative; cursor: crosshair;
     }
 
     /* Efek scanlines terminal jadul */
@@ -28,11 +28,18 @@
 
     #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.25; }
     
-    /* Wrapper utama agar lampu punya space di atas card */
+    /* Animasi Masuk ala Video Referensi */
     .login-wrapper {
       position: relative;
       z-index: 2;
-      margin-top: 60px; /* Memberi ruang untuk lampu gantung di atas */
+      margin-top: 60px;
+      animation: slideInFromSide 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slideInFromSide {
+      0% { transform: translateX(-120vw) scale(0.8); opacity: 0; }
+      60% { transform: translateX(20px) scale(1.02); opacity: 1; }
+      100% { transform: translateX(0) scale(1); opacity: 1; }
     }
 
     .container {
@@ -45,10 +52,10 @@
     }
     .hidden { display: none !important; }
 
-    /* Lampu Gantung Interaktif Hacker (Diperbaiki Posisinya) */
+    /* Lampu Gantung Interaktif Hacker */
     .lamp-panel {
       position: absolute;
-      top: -115px; /* Ditarik ke atas agar kabel dan kap lampu terlihat utuh */
+      top: -115px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -60,7 +67,7 @@
 
     .wire {
       width: 2px;
-      height: 60px; /* Panjang kabel disesuaikan */
+      height: 60px;
       background: #00ff66;
       box-shadow: 0 0 8px #00ff66;
     }
@@ -90,26 +97,9 @@
       transition: transform 0.1s ease-out;
     }
 
-    .eyes {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 4px;
-    }
-
-    .eye {
-      width: 5px;
-      height: 5px;
-      background: #030a05;
-      border-radius: 50%;
-      box-shadow: 0 0 4px #00ff66;
-    }
-
-    .mouth {
-      width: 12px;
-      height: 3px;
-      background: #030a05;
-      border-radius: 2px;
-    }
+    .eyes { display: flex; gap: 10px; margin-bottom: 4px; }
+    .eye { width: 5px; height: 5px; background: #030a05; border-radius: 50%; box-shadow: 0 0 4px #00ff66; }
+    .mouth { width: 12px; height: 3px; background: #030a05; border-radius: 2px; }
 
     /* Login Form Styling */
     .login-section { flex: 1; padding: 35px 30px; display: flex; flex-direction: column; justify-content: center; }
@@ -245,10 +235,7 @@
       box-shadow: 0 0 15px rgba(0,255,102,0.4);
       transition: 0.3s; width: auto !important;
     }
-    .download-btn:hover {
-      box-shadow: 0 0 25px #00ff66;
-      background: #33ff88;
-    }
+    .download-btn:hover { box-shadow: 0 0 25px #00ff66; background: #33ff88; }
 
     .tebak-img {
       width: 100%; max-width: 280px; height: 180px;
@@ -286,7 +273,7 @@
     </div>
   </div>
 
-  <!-- Login Screen Wrapper dengan Lampu Gantung yang Utuh -->
+  <!-- Login Screen Wrapper dengan Animasi Masuk ala Video Referensi -->
   <div class="login-wrapper" id="loginScreenWrapper">
     <div id="loginScreen" class="container">
       <div class="lamp-panel" id="lampPanel">
@@ -391,9 +378,8 @@
   <div id="modalContainer"></div>
 
   <script>
-    const WA_NUMBER = "68818691107"; // ganti nomor WA lo
+    const WA_NUMBER = "6281234567890";
 
-    // ====== MOUSE FOLLOWER UNTUK LAMPU HACKER ======
     const lampPanel = document.getElementById('lampPanel');
     const faceCircle = document.getElementById('faceCircle');
 
@@ -402,17 +388,11 @@
       const rect = lampPanel.getBoundingClientRect();
       const lampX = rect.left + rect.width / 2;
       const lampY = rect.top + rect.height / 2;
-
       const angle = Math.atan2(e.clientY - lampY, e.clientX - lampX);
       const distance = Math.min(12, Math.hypot(e.clientX - lampX, e.clientY - lampY) / 15);
-
-      const moveX = Math.cos(angle) * distance;
-      const moveY = Math.sin(angle) * distance;
-
-      faceCircle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      faceCircle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
     });
 
-    // ====== MATRIX RAIN ======
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -439,7 +419,6 @@
       canvas.height = window.innerHeight;
     });
 
-    // ====== ANIMASI LOADING ======
     function runHackingAnimation(onComplete) {
       const overlay = document.getElementById('hackOverlay');
       const progressFill = document.getElementById('progressFill');
@@ -456,7 +435,6 @@
       }, 40);
     }
 
-    // ====== LOGIN ======
     document.getElementById('loginForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const user = document.getElementById('username').value;
@@ -471,10 +449,10 @@
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
       document.getElementById('dashboardScreen').classList.add('hidden');
-      document.getElementById('loginScreenWrapper').classList.remove('hidden');
+      const wrapper = document.getElementById('loginScreenWrapper');
+      wrapper.classList.remove('hidden');
     });
 
-    // ====== TOOLS DASAR ======
     async function checkMyIP() {
       try {
         const res = await fetch('https://ipapi.co/json/');
@@ -487,10 +465,8 @@
       if (input) alert(`🔒 HASIL ENCODE:\n\n${btoa(input)}`);
     }
 
-    // ====== MODAL SYSTEM ======
     const modalContainer = document.getElementById('modalContainer');
     function closeModal() { modalContainer.innerHTML = ''; }
-
     function openModal(type) {
       let html = '';
       if (type === 'fakeff') html = modalFakeFF();
@@ -502,25 +478,19 @@
       if (type === 'tebak') setTimeout(nextTebak, 100);
     }
 
-    // ====== DOWNLOAD HELPER ======
     async function downloadImage(url, filename) {
       try {
         const res = await fetch(url);
         const blob = await res.blob();
         const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
+        a.href = blobUrl; a.download = filename;
+        document.body.appendChild(a); a.click();
         document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-      } catch (e) {
-        alert('Gagal download: ' + e.message);
-      }
+      } catch (e) { alert('Gagal download: ' + e.message); }
     }
 
-    // ====== FAKEFF ======
     function modalFakeFF() {
       return `
         <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
@@ -543,21 +513,13 @@
       btn.disabled = true;
       try {
         const res = await fetch(`/api/fakeff?nickname=${encodeURIComponent(nick)}`);
-        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error || `HTTP ${res.status}`); }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
-        out.innerHTML = `<span class="ok">✅ BERHASIL!</span>
-          <img src="${url}" alt="FakeFF">
-          <br>
-          <button class="download-btn" onclick="downloadImage('${url}', 'fakeff-${nick}.png')">
-            <i class="fas fa-download"></i> DOWNLOAD
-          </button>`;
-      } catch (e) {
-        out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`;
-      } finally { btn.disabled = false; }
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}" alt="FakeFF"><br><button class="download-btn" onclick="downloadImage('${url}', 'fakeff-${nick}.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`; } finally { btn.disabled = false; }
     }
 
-    // ====== FAKEFF DUO ======
     function modalFakeFFDuo() {
       return `
         <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
@@ -581,21 +543,13 @@
       btn.disabled = true;
       try {
         const res = await fetch(`/api/fakeffduo?username1=${encodeURIComponent(u1)}&username2=${encodeURIComponent(u2)}`);
-        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error || `HTTP ${res.status}`); }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
-        out.innerHTML = `<span class="ok">✅ BERHASIL!</span>
-          <img src="${url}" alt="FakeFF Duo">
-          <br>
-          <button class="download-btn" onclick="downloadImage('${url}', 'fakeffduo-${u1}-${u2}.png')">
-            <i class="fas fa-download"></i> DOWNLOAD
-          </button>`;
-      } catch (e) {
-        out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`;
-      } finally { btn.disabled = false; }
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}" alt="FakeFF Duo"><br><button class="download-btn" onclick="downloadImage('${url}', 'fakeffduo-${u1}-${u2}.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`; } finally { btn.disabled = false; }
     }
 
-    // ====== IQC ======
     function modalIQC() {
       return `
         <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
@@ -618,22 +572,13 @@
       btn.disabled = true;
       try {
         const res = await fetch(`/api/iqc?text=${encodeURIComponent(text)}`);
-        if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error || `HTTP ${res.status}`); }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
-        const safeName = text.slice(0, 20).replace(/[^a-zA-Z0-9]/g, '-');
-        out.innerHTML = `<span class="ok">✅ BERHASIL!</span>
-          <img src="${url}" alt="IQC">
-          <br>
-          <button class="download-btn" onclick="downloadImage('${url}', 'iqc-${safeName}.png')">
-            <i class="fas fa-download"></i> DOWNLOAD
-          </button>`;
-      } catch (e) {
-        out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`;
-      } finally { btn.disabled = false; }
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}" alt="IQC"><br><button class="download-btn" onclick="downloadImage('${url}', 'iqc.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`; } finally { btn.disabled = false; }
     }
 
-    // ====== PLAY MUSIC ======
     function modalPlay() {
       return `
         <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
@@ -647,7 +592,6 @@
           </div>
         </div>`;
     }
-
     async function generatePlay() {
       const q = document.getElementById('play-query').value.trim();
       const out = document.getElementById('play-output');
@@ -659,45 +603,21 @@
         const res = await fetch(`/api/play?q=${encodeURIComponent(q)}`);
         const data = await res.json();
         if (!res.ok || !data.status) throw new Error(data.error || `HTTP ${res.status}`);
-
         out.innerHTML = `
           <div style="text-align:left; padding:10px;">
-            <img src="${data.thumbnail}" style="width:100%; max-width:280px; border-radius:4px; margin:0 auto 10px; display:block; box-shadow:0 0 15px rgba(0,255,102,0.3);">
-            <p style="color:#00ff66; font-weight:bold; font-size:13px; margin:5px 0;">🎵 ${escapeHtml(data.title)}</p>
-            <p style="color:#00aa44; font-size:11px; margin:3px 0;">📺 ${escapeHtml(data.channel)}</p>
-            <audio controls style="width:100%; margin-top:10px;">
-              <source src="${data.download}" type="audio/mpeg">
-              Browser lo gak support audio.
-            </audio>
-            <br>
-            <a href="${data.download}" download="${escapeHtml(data.title)}.mp3" target="_blank" class="download-btn" style="text-decoration:none; display:inline-flex;">
-              <i class="fas fa-download"></i> DOWNLOAD MP3
-            </a>
-          </div>
-        `;
-      } catch (e) {
-        out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`;
-      } finally { btn.disabled = false; }
+            <img src="${data.thumbnail}" style="width:100%; max-width:280px; border-radius:4px; margin:0 auto 10px; display:block;">
+            <p style="color:#00ff66; font-weight:bold; font-size:13px; margin:5px 0;">🎵 ${data.title}</p>
+            <audio controls style="width:100%; margin-top:10px;"><source src="${data.download}" type="audio/mpeg"></audio>
+            <br><a href="${data.download}" download target="_blank" class="download-btn"><i class="fas fa-download"></i> DOWNLOAD MP3</a>
+          </div>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`; } finally { btn.disabled = false; }
     }
 
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-
-    // ====== TEBAK GAMBAR ======
     const tebakBank = [
       { emoji: '🍎', jawaban: 'Apel', opsi: ['Apel', 'Jeruk', 'Mangga', 'Anggur'] },
       { emoji: '🐘', jawaban: 'Gajah', opsi: ['Gajah', 'Badak', 'Kerbau', 'Sapi'] },
       { emoji: '🌋', jawaban: 'Gunung Meletus', opsi: ['Gunung Meletus', 'Pantai', 'Air Terjun', 'Hutan'] },
-      { emoji: '🚀', jawaban: 'Roket', opsi: ['Roket', 'Pesawat', 'Helikopter', 'Balon Udara'] },
-      { emoji: '🐍', jawaban: 'Ular', opsi: ['Ular', 'Cacing', 'Kadal', 'Buaya'] },
-      { emoji: '🌈', jawaban: 'Pelangi', opsi: ['Pelangi', 'Awan', 'Petir', 'Hujan'] },
-      { emoji: '🐧', jawaban: 'Penguin', opsi: ['Penguin', 'Bebek', 'Angsa', 'Ayam'] },
-      { emoji: '🍕', jawaban: 'Pizza', opsi: ['Pizza', 'Burger', 'Hotdog', 'Sandwich'] },
-      { emoji: '⚽', jawaban: 'Bola Sepak', opsi: ['Bola Sepak', 'Bola Basket', 'Bola Voli', 'Bola Bowling'] },
-      { emoji: '🦁', jawaban: 'Singa', opsi: ['Singa', 'Harimau', 'Macan', 'Cheetah'] },
-      { emoji: '🌙', jawaban: 'Bulan', opsi: ['Bulan', 'Matahari', 'Bintang', 'Planet'] },
-      { emoji: '🎸', jawaban: 'Gitar', opsi: ['Gitar', 'Biola', 'Piano', 'Drum'] }
+      { emoji: '🚀', jawaban: 'Roket', opsi: ['Roket', 'Pesawat', 'Helikopter', 'Balon Udara'] }
     ];
     let tebakCurrent = null, tebakSkor = 0, tebakTotal = 0;
 
@@ -715,25 +635,19 @@
           </div>
         </div>`;
     }
-
     function nextTebak() {
       const pick = tebakBank[Math.floor(Math.random() * tebakBank.length)];
-      tebakCurrent = pick;
-      tebakTotal++;
+      tebakCurrent = pick; tebakTotal++;
       document.getElementById('tebak-skor').innerText = tebakSkor;
       document.getElementById('tebak-total').innerText = tebakTotal;
-      const imgBox = document.getElementById('tebak-img');
-      imgBox.innerText = pick.emoji;
+      document.getElementById('tebak-img').innerText = pick.emoji;
       const opts = [...pick.opsi].sort(() => Math.random() - 0.5);
-      const container = document.getElementById('tebak-options');
-      container.innerHTML = opts.map(o => `<button class="tebak-opt" onclick="jawabTebak('${o.replace(/'/g,"\\'")}')">${o}</button>`).join('');
+      document.getElementById('tebak-options').innerHTML = opts.map(o => `<button class="tebak-opt" onclick="jawabTebak('${o}')">${o}</button>`).join('');
       document.getElementById('tebak-output').innerHTML = 'Pilih jawaban di atas!';
     }
-
     function jawabTebak(pilihan) {
       if (!tebakCurrent) return;
-      const buttons = document.querySelectorAll('.tebak-opt');
-      buttons.forEach(b => {
+      document.querySelectorAll('.tebak-opt').forEach(b => {
         if (b.innerText === tebakCurrent.jawaban) b.classList.add('correct');
         else if (b.innerText === pilihan) b.classList.add('wrong');
         b.disabled = true;
@@ -745,7 +659,6 @@
         document.getElementById('tebak-output').innerHTML = `<span class="err">✘ Salah! Jawaban: ${tebakCurrent.jawaban}</span>`;
       }
       document.getElementById('tebak-skor').innerText = tebakSkor;
-      document.getElementById('tebak-total').innerText = tebakTotal;
     }
   </script>
 </body>
