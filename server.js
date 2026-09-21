@@ -77,4 +77,39 @@ app.get('/api/fakeffduo', async (req, res) => {
     }
 });
 
+// ====== IQC ======
+app.get('/api/iqc', async (req, res) => {
+    const text = req.query.text;
+    if (!text) return res.status(400).json({ error: 'Text wajib diisi' });
+    try {
+        const apiUrl = `https://api.azbry.com/api/maker/iqc?text=${encodeURIComponent(text)}`;
+        const response = await axios.get(apiUrl, {
+            responseType: 'arraybuffer',
+            timeout: 30000,
+            validateStatus: () => true,
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+        });
+        if (response.status >= 400) return res.status(500).json({ error: `API error HTTP ${response.status}` });
+        const mime = response.headers['content-type'] || '';
+        let buffer;
+        if (mime.includes('application/json')) {
+            let json;
+            try { json = JSON.parse(Buffer.from(response.data).toString('utf8')); }
+            catch { return res.status(500).json({ error: 'Gagal parse JSON dari API' }); }
+            const mediaUrl = json?.result || json?.url || json?.data;
+            if (!mediaUrl) return res.status(500).json({ error: 'Media URL tidak ditemukan' });
+            const mediaRes = await axios.get(mediaUrl, { responseType: 'arraybuffer', timeout: 30000 });
+            buffer = Buffer.from(mediaRes.data);
+        } else {
+            buffer = Buffer.from(response.data);
+        }
+        if (!buffer || buffer.length === 0) return res.status(500).json({ error: 'Gambar kosong dari server' });
+        res.set('Content-Type', mime.includes('image') ? mime : 'image/png');
+        res.send(buffer);
+    } catch (e) {
+        console.error('IQC error:', e.message);
+        res.status(500).json({ error: e.message || 'Gagal membuat IQC' });
+    }
+});
+
 module.exports = app;
