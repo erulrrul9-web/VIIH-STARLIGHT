@@ -38,7 +38,6 @@
       align-items: center;
     }
 
-    /* Karakter Orang Hacker Asli (CSS Drawing + Animasi Jalan) */
     .person-container {
       position: absolute;
       width: 80px;
@@ -47,14 +46,12 @@
       animation: personWalkThrow 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    /* Struktur Bagian Tubuh Orang */
     .person-head {
       position: absolute; top: 0; left: 25px;
       width: 30px; height: 30px;
       background: #00ff66; border-radius: 50%;
       box-shadow: 0 0 10px #00ff66;
     }
-    /* Topi / Hoodie Hacker */
     .person-head::before {
       content: '';
       position: absolute; top: -5px; left: -2px;
@@ -68,7 +65,6 @@
       background: #011c08; border: 2px solid #00ff66;
       border-radius: 8px; box-shadow: 0 0 10px rgba(0,255,102,0.4);
     }
-    /* Tangan & Kaki dengan animasi melangkah */
     .person-leg-left, .person-leg-right {
       position: absolute; top: 76px; width: 10px; height: 35px;
       background: #00ff66; border-radius: 5px;
@@ -88,13 +84,12 @@
     @keyframes personWalkThrow {
       0% { transform: translateX(-130vw) translateY(30px); opacity: 0; }
       10% { opacity: 1; }
-      42% { transform: translateX(-35px) translateY(0); } /* Posisi pas mau lempar stiker/koper */
-      52% { transform: translateX(-20px) translateY(-10px) scale(1.05); } /* Gerakan lempar */
-      68% { transform: translateX(130vw) translateY(30px); opacity: 0; } /* Kabur ke kanan */
+      42% { transform: translateX(-35px) translateY(0); }
+      52% { transform: translateX(-20px) translateY(-10px) scale(1.05); }
+      68% { transform: translateX(130vw) translateY(30px); opacity: 0; }
       100% { transform: translateX(130vw) translateY(30px); opacity: 0; }
     }
 
-    /* Koper / Stiker yang dilempar */
     .suitcase-item {
       position: absolute;
       width: 55px; height: 40px;
@@ -122,7 +117,6 @@
       100% { transform: scale(0); opacity: 0; display: none; }
     }
 
-    /* Form Login Utama */
     .container {
       position: absolute;
       display: flex; width: 420px;
@@ -164,7 +158,6 @@
     }
     .login-btn:hover { background: #00ff66; color: #030a05; box-shadow: 0 0 20px #00ff66; }
 
-    /* Overlay Loading */
     .hack-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(3,10,5,0.95); z-index: 1000;
@@ -188,7 +181,6 @@
       box-shadow: 0 0 10px #00ff66; transition: width 0.1s linear;
     }
 
-    /* Dashboard Container */
     .container.dashboard {
       width: 850px; max-width: 95%; flex-direction: column; padding: 30px; position: relative;
     }
@@ -218,7 +210,6 @@
     }
     .logout-btn:hover { background: #ff3366; color: #fff; box-shadow: 0 0 15px #ff3366; }
 
-    /* Modal */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(3,10,5,0.9);
       z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;
@@ -308,14 +299,13 @@
     <div class="hack-content">
       <div class="spinner"></div>
       <h2 style="color:#00ff66; font-size:16px;">AUTHENTICATING...</h2>
-      <p style="font-size:11px;color:#00aa44; margin-top:5px;">SENDING ACCESS VERIFICATION TO WHATSAPP...</p>
+      <p style="font-size:11px;color:#00aa44; margin-top:5px;">VERIFYING USER CREDENTIALS...</p>
       <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
     </div>
   </div>
 
   <!-- Area Animasi Karakter Orang Jalan & Koper -->
   <div class="scene-box" id="sceneBox">
-    <!-- Karakter Orang Hacker Asli (CSS Animation) -->
     <div class="person-container">
       <div class="person-head"></div>
       <div class="person-body"></div>
@@ -332,10 +322,10 @@
         </div>
         <form id="loginForm">
           <div class="form-group">
-            <label>&gt; USERNAME / ID</label>
+            <label>&gt; USERNAME (NAMA TEMAN)</label>
             <div class="input-field">
               <i class="fas fa-user-shield"></i>
-              <input type="text" id="username" placeholder="root_admin" required autocomplete="off">
+              <input type="text" id="username" placeholder="cth: ruls" required autocomplete="off">
             </div>
           </div>
           <div class="form-group">
@@ -345,7 +335,7 @@
               <input type="password" id="password" placeholder="••••••••••••" required>
             </div>
           </div>
-          <button type="submit" class="login-btn"><i class="fab fa-whatsapp"></i> EXECUTE LOGIN</button>
+          <button type="submit" class="login-btn"><i class="fas fa-terminal"></i> EXECUTE LOGIN</button>
         </form>
       </div>
     </div>
@@ -355,7 +345,7 @@
   <div id="dashboardScreen" class="container dashboard hidden">
     <div class="dashboard-header">
       <h2><i class="fas fa-terminal"></i> VII-H-STARLIGHT CYBER TOOLS</h2>
-      <p>Status: <span style="color:#00ff66;font-weight:bold;">SYSTEM ONLINE</span></p>
+      <p>Logged in as: <span id="welcomeUser" style="color:#00ff66;font-weight:bold;">-</span> | Status: <span style="color:#00ff66;font-weight:bold;">ONLINE</span></p>
     </div>
 
     <div class="tools-grid">
@@ -415,7 +405,13 @@
   <div id="modalContainer"></div>
 
   <script>
-    const WA_NUMBER = "6281234567890";
+    // Daftar nama teman yang diizinkan login (Case-insensitive)
+    const allowedUsers = [
+      "genji", "ruls", "hafis", "indah", "keyla", "adnes", 
+      "dani", "rangga", "aska", "wildan", "rahajeng", "rohman", 
+      "azilah", "zio", "denis", "zalfa", "zulfan", "sadewa", 
+      "dayana", "nayara", "afan", "syafa", "ikha"
+    ];
 
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
@@ -449,22 +445,32 @@
       overlay.classList.remove('hidden');
       let progress = 0;
       const interval = setInterval(() => {
-        progress += 2;
+        progress += 3;
         progressFill.style.width = `${progress}%`;
         if (progress >= 100) {
           clearInterval(interval);
           overlay.classList.add('hidden');
           if (onComplete) onComplete();
         }
-      }, 40);
+      }, 30);
     }
 
     document.getElementById('loginForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      const msg = `*AKSES LOGIN VII-H-STARLIGHT*%0A👤 *User:* ${user}%0A🔑 *Pass:* ${pass}`;
-      window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+      const user = document.getElementById('username').value.trim().toLowerCase();
+      const pass = document.getElementById('password').value.trim();
+
+      // Cek apakah username terdaftar dan password benar
+      if (!allowedUsers.includes(user)) {
+        alert("ACCESS DENIED: Nama tidak terdaftar di database kelas!");
+        return;
+      }
+      if (pass !== "VII-H-STARLIGHT") {
+        alert("ACCESS DENIED: Password salah!");
+        return;
+      }
+
+      document.getElementById('welcomeUser').innerText = user.toUpperCase();
       runHackingAnimation(() => {
         document.getElementById('sceneBox').classList.add('hidden');
         document.getElementById('dashboardScreen').classList.remove('hidden');
@@ -473,7 +479,12 @@
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
       document.getElementById('dashboardScreen').classList.add('hidden');
-      document.getElementById('sceneBox').classList.remove('hidden');
+      document.getElementById('sceneBox').classList.add('hidden');
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      setTimeout(() => {
+        document.getElementById('sceneBox').classList.remove('hidden');
+      }, 50);
     });
 
     async function checkMyIP() {
