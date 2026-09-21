@@ -112,4 +112,26 @@ app.get('/api/iqc', async (req, res) => {
     }
 });
 
+// ====== PLAY MUSIC ======
+app.get('/api/play', async (req, res) => {
+    const q = req.query.q;
+    if (!q) return res.status(400).json({ error: 'Query wajib diisi' });
+    try {
+        const api = `https://api.azbry.com/api/download/ytplay2?q=${encodeURIComponent(q)}`;
+        const { data } = await axios.get(api, { timeout: 60000 });
+        if (!data.status || !data.result) return res.status(500).json({ error: 'Gagal mengambil data dari API' });
+        const r = data.result;
+        res.json({
+            status: true,
+            title: r.title || 'Unknown',
+            channel: r.channel || 'Unknown',
+            thumbnail: r.thumbnail || '',
+            download: r.download || ''
+        });
+    } catch (e) {
+        console.error('Play error:', e.message);
+        res.status(500).json({ error: e.message || 'Gagal mencari lagu' });
+    }
+});
+
 module.exports = app;
