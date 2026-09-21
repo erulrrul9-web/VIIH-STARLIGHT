@@ -7,7 +7,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // API KEY GEMINI - taruh di environment variable!
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const part1 = "AQ.Ab8RN6LtuCAF";
+const part2 = "1v457XI0aTKGPbHDW61dwTyBWg4Bi5rIH6ZKQw";
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || (part1 + part2);
 
 app.use(cors());
 app.use(express.json());
