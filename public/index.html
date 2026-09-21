@@ -5,156 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VII-H-STARLIGHT | Cyber Portal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Share Tech Mono', monospace; }
     body {
       background-color: #030a05; color: #00ff66; min-height: 100vh;
       display: flex; justify-content: center; align-items: center;
-      overflow-x: hidden; position: relative; cursor: crosshair;
+      overflow-x: hidden; position: relative;
     }
-
-    body::before {
-      content: " ";
-      display: block;
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-      z-index: 999;
-      background-size: 100% 4px, 6px 100%;
-      pointer-events: none;
-    }
-
     #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.25; }
-
-    /* Scene Animasi Karakter Orang & Koper */
-    .scene-box {
-      position: relative;
-      z-index: 5;
-      width: 420px;
-      height: 480px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .person-container {
-      position: absolute;
-      width: 80px;
-      height: 120px;
-      z-index: 10;
-      animation: personWalkThrow 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    }
-
-    .person-head {
-      position: absolute; top: 0; left: 25px;
-      width: 30px; height: 30px;
-      background: #00ff66; border-radius: 50%;
-      box-shadow: 0 0 10px #00ff66;
-    }
-    .person-head::before {
-      content: '';
-      position: absolute; top: -5px; left: -2px;
-      width: 34px; height: 18px;
-      background: #02200a; border-radius: 20px 20px 0 0;
-      border: 1px solid #00ff66;
-    }
-    .person-body {
-      position: absolute; top: 28px; left: 22px;
-      width: 36px; height: 50px;
-      background: #011c08; border: 2px solid #00ff66;
-      border-radius: 8px; box-shadow: 0 0 10px rgba(0,255,102,0.4);
-    }
-    .person-leg-left, .person-leg-right {
-      position: absolute; top: 76px; width: 10px; height: 35px;
-      background: #00ff66; border-radius: 5px;
-    }
-    .person-leg-left { left: 26px; animation: stepLegLeft 0.35s infinite alternate; }
-    .person-leg-right { left: 44px; animation: stepLegRight 0.35s infinite alternate; }
-
-    @keyframes stepLegLeft {
-      0% { transform: rotate(20deg); }
-      100% { transform: rotate(-25deg); }
-    }
-    @keyframes stepLegRight {
-      0% { transform: rotate(-25deg); }
-      100% { transform: rotate(20deg); }
-    }
-
-    @keyframes personWalkThrow {
-      0% { transform: translateX(-130vw) translateY(30px); opacity: 0; }
-      10% { opacity: 1; }
-      42% { transform: translateX(-35px) translateY(0); }
-      52% { transform: translateX(-20px) translateY(-10px) scale(1.05); }
-      68% { transform: translateX(130vw) translateY(30px); opacity: 0; }
-      100% { transform: translateX(130vw) translateY(30px); opacity: 0; }
-    }
-
-    .suitcase-item {
-      position: absolute;
-      width: 55px; height: 40px;
-      background: #02200a;
-      border: 2px solid #00ff66;
-      border-radius: 5px;
-      box-shadow: 0 0 15px #00ff66;
-      z-index: 8;
-      animation: suitcaseThrowAndOpen 3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-    .suitcase-item::before {
-      content: '';
-      position: absolute;
-      top: -6px; left: 16px;
-      width: 19px; height: 6px;
-      border: 2px solid #00ff66; border-bottom: none;
-      border-radius: 4px 4px 0 0;
-    }
-
-    @keyframes suitcaseThrowAndOpen {
-      0%, 38% { transform: scale(0) translateX(-200px); opacity: 0; }
-      48% { transform: scale(1) translateX(0) rotate(0deg); opacity: 1; }
-      60% { transform: scale(1.35) rotate(360deg); opacity: 1; }
-      75% { transform: scale(0.1); opacity: 0; }
-      100% { transform: scale(0); opacity: 0; display: none; }
-    }
-
     .container {
-      position: absolute;
-      display: flex; width: 420px;
-      max-width: 95vw; background: rgba(0, 20, 10, 0.95);
+      position: relative; z-index: 12; display: flex; width: 850px;
+      max-width: 95%; background: rgba(0, 20, 10, 0.95);
       border: 1px solid #00ff66; border-radius: 12px;
-      box-shadow: 0 0 35px rgba(0, 255, 102, 0.3), inset 0 0 15px rgba(0, 255, 102, 0.1);
-      backdrop-filter: blur(8px);
-      z-index: 12;
-      opacity: 0;
-      transform: scale(0);
-      animation: popupLoginForm 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 2.25s forwards;
+      box-shadow: 0 0 35px rgba(0, 255, 102, 0.3);
+      backdrop-filter: blur(8px); margin: 20px 0; padding: 30px;
+      flex-direction: column;
     }
-
-    @keyframes popupLoginForm {
-      0% { transform: scale(0); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
     .hidden { display: none !important; }
-
-    .login-section { flex: 1; padding: 35px 30px; display: flex; flex-direction: column; justify-content: center; }
-    .logo { text-align: center; margin-bottom: 25px; margin-top: 10px; }
-    .logo h1 { font-size: 20px; color: #00ff66; text-shadow: 0 0 10px #00ff66; letter-spacing: 1px; }
-    .logo p { font-size: 11px; color: #00aa44; margin-top: 4px; letter-spacing: 0.5px; }
-    
+    .login-section { display: flex; flex-direction: column; justify-content: center; }
+    .logo { text-align: center; margin-bottom: 25px; }
+    .logo h1 { font-size: 22px; color: #00ff66; text-shadow: 0 0 10px #00ff66; }
+    .logo p { font-size: 11px; color: #00aa44; margin-top: 4px; }
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: 11px; margin-bottom: 6px; color: #00cc55; }
-    .input-field { display: flex; align-items: center; background: rgba(1, 15, 5, 0.9); border: 1px solid #00aa44; border-radius: 6px; padding: 11px 14px; transition: 0.3s; }
+    .input-field { display: flex; align-items: center; background: rgba(1, 15, 5, 0.9); border: 1px solid #00aa44; border-radius: 6px; padding: 11px 14px; }
     .input-field:focus-within { border-color: #00ff66; box-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
-    .input-field i { color: #00ff66; margin-right: 12px; font-size: 14px; }
-    .input-field input { background: transparent; border: none; outline: none; color: #00ff66; width: 100%; font-family: 'Share Tech Mono', monospace; font-size: 13px; }
+    .input-field i { color: #00ff66; margin-right: 12px; }
+    .input-field input { background: transparent; border: none; outline: none; color: #00ff66; width: 100%; font-family: inherit; font-size: 13px; }
     .input-field input::placeholder { color: #005522; }
-    
     .login-btn {
       width: 100%; padding: 12px; background: #003311; color: #00ff66;
       border: 1px solid #00ff66; border-radius: 6px; font-weight: bold; font-size: 13px;
-      cursor: pointer; box-shadow: 0 0 10px rgba(0,255,102,0.2); transition: 0.3s; margin-top: 10px;
-      letter-spacing: 1px;
+      cursor: pointer; transition: 0.3s; margin-top: 10px;
     }
     .login-btn:hover { background: #00ff66; color: #030a05; box-shadow: 0 0 20px #00ff66; }
 
@@ -168,22 +51,11 @@
       width: 50px; height: 50px; border: 4px solid #003311;
       border-top: 4px solid #00ff66; border-radius: 50%;
       margin: 0 auto 20px; animation: spin 1s linear infinite;
-      box-shadow: 0 0 10px #00ff66;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .progress-bar {
-      width: 100%; height: 8px; background: #003311;
-      border: 1px solid #00ff66; border-radius: 4px;
-      margin-top: 15px; overflow: hidden;
-    }
-    .progress-fill {
-      width: 0%; height: 100%; background: #00ff66;
-      box-shadow: 0 0 10px #00ff66; transition: width 0.1s linear;
-    }
+    .progress-bar { width: 100%; height: 8px; background: #003311; border: 1px solid #00ff66; border-radius: 4px; margin-top: 15px; overflow: hidden; }
+    .progress-fill { width: 0%; height: 100%; background: #00ff66; transition: width 0.1s linear; }
 
-    .container.dashboard {
-      width: 850px; max-width: 95%; flex-direction: column; padding: 30px; position: relative;
-    }
     .dashboard-header { border-bottom: 1px solid rgba(0,255,102,0.3); padding-bottom: 15px; margin-bottom: 20px; }
     .dashboard-header h2 { font-size: 18px; }
     .dashboard-header p { font-size: 12px; color: #88ffaa; margin-top: 5px; }
@@ -195,20 +67,19 @@
     }
     .tool-card:hover { border-color: #00ff66; box-shadow: 0 0 15px rgba(0,255,102,0.3); }
     .tool-card i { font-size: 28px; margin-bottom: 10px; color: #00ff66; }
-    .tool-card h3 { font-size: 14px; margin-bottom: 6px; color: #00ff66; }
+    .tool-card h3 { font-size: 14px; margin-bottom: 6px; }
     .tool-card p { font-size: 11px; color: #00aa44; margin-bottom: 15px; }
     .tool-btn {
       padding: 8px 15px; background: transparent; color: #00ff66;
       border: 1px solid #00ff66; border-radius: 4px;
-      cursor: pointer; font-weight: bold; font-size: 11px; transition: 0.2s;
+      cursor: pointer; font-weight: bold; font-size: 11px;
     }
-    .tool-btn:hover { background: #00ff66; color: #030a05; box-shadow: 0 0 10px #00ff66; }
+    .tool-btn:hover { background: #00ff66; color: #030a05; }
     .logout-btn {
       width: 100%; padding: 12px; background: #330011; color: #ff3366;
       border: 1px solid #ff3366; border-radius: 4px; cursor: pointer; font-weight: bold;
-      transition: 0.2s;
     }
-    .logout-btn:hover { background: #ff3366; color: #fff; box-shadow: 0 0 15px #ff3366; }
+    .logout-btn:hover { background: #ff3366; color: #fff; }
 
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(3,10,5,0.9);
@@ -220,25 +91,19 @@
       border: 1px solid #00ff66; border-radius: 8px;
       box-shadow: 0 0 30px rgba(0,255,102,0.3); padding: 25px;
     }
-    .modal-box h3 {
-      color: #00ff66; font-size: 16px; margin-bottom: 15px;
-      text-shadow: 0 0 8px rgba(0,255,102,0.5); border-bottom: 1px solid rgba(0,255,102,0.3);
-      padding-bottom: 10px;
-    }
+    .modal-box h3 { color: #00ff66; font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid rgba(0,255,102,0.3); padding-bottom: 10px; }
     .modal-box input, .modal-box textarea {
       width: 100%; padding: 10px; margin: 6px 0;
       background: rgba(0,15,5,0.8); border: 1px solid #00aa44;
-      border-radius: 4px; color: #00ff66; font-family: 'Share Tech Mono', monospace;
-      font-size: 13px; outline: none;
+      border-radius: 4px; color: #00ff66; font-family: inherit; font-size: 13px; outline: none;
     }
-    .modal-box input::placeholder, .modal-box textarea::placeholder { color: #005522; }
-    .modal-box input:focus, .modal-box textarea:focus { border-color: #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.4); }
+    .modal-box input:focus { border-color: #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.4); }
     .modal-box button {
       padding: 10px 20px; background: #003311; color: #00ff66;
       border: 1px solid #00ff66; border-radius: 4px; font-weight: bold;
-      cursor: pointer; margin-top: 8px; font-size: 12px; transition: 0.3s;
+      cursor: pointer; margin-top: 8px; font-size: 12px;
     }
-    .modal-box button:hover { background: #00ff66; color: #030a05; box-shadow: 0 0 15px #00ff66; }
+    .modal-box button:hover { background: #00ff66; color: #030a05; }
     .modal-box button:disabled { opacity: 0.5; cursor: not-allowed; }
     .modal-close {
       float: right; background: transparent !important; color: #ff3366 !important;
@@ -251,39 +116,33 @@
       border: 1px dashed rgba(0,255,102,0.4); border-radius: 6px;
       min-height: 40px; font-size: 12px; text-align: center; word-break: break-word;
     }
-    .output-area img {
-      max-width: 100%; border-radius: 4px; margin-top: 8px;
-      box-shadow: 0 0 15px rgba(0,255,102,0.3);
-    }
+    .output-area img { max-width: 100%; border-radius: 4px; margin-top: 8px; }
     .err { color: #ff3366; font-weight: bold; }
     .ok { color: #00ff66; font-weight: bold; }
-
     .download-btn {
       display: inline-flex; align-items: center; gap: 8px;
       margin-top: 12px; padding: 10px 20px;
       background: #00ff66; color: #030a05 !important; font-weight: bold;
       border: none; border-radius: 4px; cursor: pointer;
       font-size: 12px; text-decoration: none;
-      box-shadow: 0 0 15px rgba(0,255,102,0.4);
-      transition: 0.3s; width: auto !important;
     }
-    .download-btn:hover { box-shadow: 0 0 25px #00ff66; background: #33ff88; }
+    .download-btn:hover { background: #33ff88; }
 
     .tebak-img {
       width: 100%; max-width: 280px; height: 180px;
       background: rgba(0,15,5,0.8); border: 1px solid #00aa44;
       border-radius: 6px; margin: 10px auto;
       display: flex; align-items: center; justify-content: center;
-      font-size: 50px; box-shadow: 0 0 15px rgba(0,255,102,0.2);
+      font-size: 50px;
     }
     .tebak-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
     .tebak-opt {
       padding: 10px; background: rgba(0,15,5,0.8);
       border: 1px solid #00aa44; color: #00ff66;
       border-radius: 4px; cursor: pointer;
-      font-weight: bold; font-size: 12px; transition: 0.2s;
+      font-weight: bold; font-size: 12px;
     }
-    .tebak-opt:hover { border-color: #00ff66; background: rgba(0,255,102,0.1); }
+    .tebak-opt:hover { border-color: #00ff66; }
     .tebak-opt.correct { background: #00ff66; color: #030a05; }
     .tebak-opt.wrong { background: #ff3366; color: #fff; border-color: #ff3366; }
 
@@ -304,45 +163,35 @@
     </div>
   </div>
 
-  <!-- Area Animasi Karakter Orang Jalan & Koper -->
-  <div class="scene-box" id="sceneBox">
-    <div class="person-container">
-      <div class="person-head"></div>
-      <div class="person-body"></div>
-      <div class="person-leg-left"></div>
-      <div class="person-leg-right"></div>
-    </div>
-    <div class="suitcase-item"></div>
-
-    <div id="loginScreen" class="container">
-      <div class="login-section">
-        <div class="logo">
-          <h1>// VII-H-STARLIGHT</h1>
-          <p>SECURE TERMINAL ACCESS</p>
-        </div>
-        <form id="loginForm">
-          <div class="form-group">
-            <label>&gt; USERNAME (NAMA TEMAN)</label>
-            <div class="input-field">
-              <i class="fas fa-user-shield"></i>
-              <input type="text" id="username" placeholder="cth: ruls" required autocomplete="off">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>&gt; PASSWORD</label>
-            <div class="input-field">
-              <i class="fas fa-key"></i>
-              <input type="password" id="password" placeholder="••••••••••••" required>
-            </div>
-          </div>
-          <button type="submit" class="login-btn"><i class="fas fa-terminal"></i> EXECUTE LOGIN</button>
-        </form>
+  <!-- Login -->
+  <div id="loginScreen" class="container">
+    <div class="login-section">
+      <div class="logo">
+        <h1>// VII-H-STARLIGHT</h1>
+        <p>SECURE TERMINAL ACCESS</p>
       </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>&gt; USERNAME (NAMA TEMAN)</label>
+          <div class="input-field">
+            <i class="fas fa-user-shield"></i>
+            <input type="text" id="username" placeholder="cth: ruls" required autocomplete="off">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>&gt; PASSWORD</label>
+          <div class="input-field">
+            <i class="fas fa-key"></i>
+            <input type="password" id="password" placeholder="••••••••••••" required>
+          </div>
+        </div>
+        <button type="submit" class="login-btn"><i class="fas fa-terminal"></i> EXECUTE LOGIN</button>
+      </form>
     </div>
   </div>
 
-  <!-- Dashboard Screen -->
-  <div id="dashboardScreen" class="container dashboard hidden">
+  <!-- Dashboard -->
+  <div id="dashboardScreen" class="container hidden">
     <div class="dashboard-header">
       <h2><i class="fas fa-terminal"></i> VII-H-STARLIGHT CYBER TOOLS</h2>
       <p>Logged in as: <span id="welcomeUser" style="color:#00ff66;font-weight:bold;">-</span> | Status: <span style="color:#00ff66;font-weight:bold;">ONLINE</span></p>
@@ -392,6 +241,34 @@
       </div>
 
       <div class="tool-card">
+        <i class="fas fa-pen-fancy"></i>
+        <h3>Nulis</h3>
+        <p>Bikin gambar tulisan tangan dari teks.</p>
+        <button class="tool-btn" onclick="openModal('nulis')">BUKA TOOL</button>
+      </div>
+
+      <div class="tool-card">
+        <i class="fab fa-tiktok"></i>
+        <h3>TikTok Downloader</h3>
+        <p>Download video/slide TikTok tanpa watermark.</p>
+        <button class="tool-btn" onclick="openModal('tiktok')">BUKA TOOL</button>
+      </div>
+
+      <div class="tool-card">
+        <i class="fas fa-wallet"></i>
+        <h3>FakeSaldo</h3>
+        <p>Bikin gambar saldo DANA palsu (hiburan).</p>
+        <button class="tool-btn" onclick="openModal('fakesaldo')">BUKA TOOL</button>
+      </div>
+
+      <div class="tool-card">
+        <i class="fas fa-signature"></i>
+        <h3>Create Logo</h3>
+        <p>Bikin logo teks style Marvel.</p>
+        <button class="tool-btn" onclick="openModal('createlogo')">BUKA TOOL</button>
+      </div>
+
+      <div class="tool-card">
         <i class="fas fa-image"></i>
         <h3>Tebak Gambar</h3>
         <p>Kuis tebak gambar, soal selalu ganti.</p>
@@ -405,23 +282,17 @@
   <div id="modalContainer"></div>
 
   <script>
-    // Daftar nama teman yang diizinkan login (Case-insensitive)
-    const allowedUsers = [
-      "genji", "ruls", "hafis", "indah", "keyla", "adnes", 
-      "dani", "rangga", "aska", "wildan", "rahajeng", "rohman", 
-      "azilah", "zio", "denis", "zalfa", "zulfan", "sadewa", 
-      "dayana", "nayara", "afan", "syafa", "ikha"
-    ];
+    const allowedUsers = ["genji","ruls","hafis","indah","keyla","adnes","dani","rangga","aska","wildan","rahajeng","rohman","azilah","zio","denis","zalfa","zulfan","sadewa","dayana","nayara","afan","syafa","ikha"];
 
+    // Matrix rain
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const characters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*';
     const fontSize = 14;
     const columns = canvas.width / fontSize;
     const drops = Array.from({ length: columns }).fill(1);
-    function drawMatrix() {
+    setInterval(() => {
       ctx.fillStyle = 'rgba(3,10,5,0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#00ff66';
@@ -432,12 +303,8 @@
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
-    }
-    setInterval(drawMatrix, 33);
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
+    }, 33);
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
     function runHackingAnimation(onComplete) {
       const overlay = document.getElementById('hackOverlay');
@@ -459,44 +326,32 @@
       e.preventDefault();
       const user = document.getElementById('username').value.trim().toLowerCase();
       const pass = document.getElementById('password').value.trim();
-
-      // Cek apakah username terdaftar dan password benar
-      if (!allowedUsers.includes(user)) {
-        alert("ACCESS DENIED: Nama tidak terdaftar di database kelas!");
-        return;
-      }
-      if (pass !== "VII-H-STARLIGHT") {
-        alert("ACCESS DENIED: Password salah!");
-        return;
-      }
-
+      if (!allowedUsers.includes(user)) { alert("ACCESS DENIED: Nama tidak terdaftar!"); return; }
+      if (pass !== "VII-H-STARLIGHT") { alert("ACCESS DENIED: Password salah!"); return; }
       document.getElementById('welcomeUser').innerText = user.toUpperCase();
       runHackingAnimation(() => {
-        document.getElementById('sceneBox').classList.add('hidden');
+        document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboardScreen').classList.remove('hidden');
       });
     });
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
       document.getElementById('dashboardScreen').classList.add('hidden');
-      document.getElementById('sceneBox').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
       document.getElementById('username').value = '';
       document.getElementById('password').value = '';
-      setTimeout(() => {
-        document.getElementById('sceneBox').classList.remove('hidden');
-      }, 50);
     });
 
     async function checkMyIP() {
       try {
         const res = await fetch('https://ipapi.co/json/');
         const data = await res.json();
-        alert(`🌐 HASIL PEMINDAIAN IP:\n\nIP Publik: ${data.ip}\nKota: ${data.city}\nWilayah: ${data.region}\nISP: ${data.org}`);
-      } catch { alert('Gagal mengambil data IP.'); }
+        alert(`🌐 HASIL IP:\n\nIP: ${data.ip}\nKota: ${data.city}\nWilayah: ${data.region}\nISP: ${data.org}`);
+      } catch { alert('Gagal ambil data IP.'); }
     }
     function encodeText() {
-      const input = prompt("Masukkan teks yang ingin di-encode:");
-      if (input) alert(`🔒 HASIL ENCODE:\n\n${btoa(input)}`);
+      const input = prompt("Masukkan teks:");
+      if (input) alert(`🔒 HASIL:\n\n${btoa(input)}`);
     }
 
     const modalContainer = document.getElementById('modalContainer');
@@ -507,6 +362,10 @@
       if (type === 'fakeffduo') html = modalFakeFFDuo();
       if (type === 'iqc') html = modalIQC();
       if (type === 'play') html = modalPlay();
+      if (type === 'nulis') html = modalNulis();
+      if (type === 'tiktok') html = modalTikTok();
+      if (type === 'fakesaldo') html = modalFakeSaldo();
+      if (type === 'createlogo') html = modalCreateLogo();
       if (type === 'tebak') html = modalTebak();
       modalContainer.innerHTML = html;
       if (type === 'tebak') setTimeout(nextTebak, 100);
@@ -525,149 +384,233 @@
       } catch (e) { alert('Gagal download: ' + e.message); }
     }
 
+    // ===== FAKEFF =====
     function modalFakeFF() {
-      return `
-        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-          <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
-            <h3><i class="fas fa-mask"></i> FAKEFF</h3>
-            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Masukkan nickname, hasil bakal muncul di bawah.</p>
-            <input type="text" id="ff-nick" placeholder="Contoh: Rulss">
-            <button id="ff-btn" onclick="generateFakeFF()">GENERATE</button>
-            <div id="ff-output" class="output-area"></div>
-          </div>
-        </div>`;
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fas fa-mask"></i> FAKEFF</h3>
+        <input type="text" id="ff-nick" placeholder="Contoh: Rulss">
+        <button id="ff-btn" onclick="generateFakeFF()">GENERATE</button>
+        <div id="ff-output" class="output-area"></div>
+      </div></div>`;
     }
     async function generateFakeFF() {
       const nick = document.getElementById('ff-nick').value.trim();
-      const out = document.getElementById('ff-output');
-      const btn = document.getElementById('ff-btn');
+      const out = document.getElementById('ff-output'); const btn = document.getElementById('ff-btn');
       if (!nick) { out.innerHTML = '<span class="err">Nickname wajib diisi!</span>'; return; }
-      out.innerHTML = '<span style="color:#00ffff;">⏳ Lagi generate...</span>';
-      btn.disabled = true;
+      out.innerHTML = '⏳ Lagi generate...'; btn.disabled = true;
       try {
         const res = await fetch(`/api/fakeff?nickname=${encodeURIComponent(nick)}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}" alt="FakeFF"><br><button class="download-btn" onclick="downloadImage('${url}', 'fakeff-${nick}.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
-      } catch (e) { out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`; } finally { btn.disabled = false; }
+        const blob = await res.blob(); const url = URL.createObjectURL(blob);
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}"><br><button class="download-btn" onclick="downloadImage('${url}','fakeff-${nick}.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ ${e.message}</span>`; } finally { btn.disabled = false; }
     }
 
+    // ===== FAKEFF DUO =====
     function modalFakeFFDuo() {
-      return `
-        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-          <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
-            <h3><i class="fas fa-users"></i> FAKEFF DUO</h3>
-            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Format: Username1|Username2</p>
-            <input type="text" id="duo-input" placeholder="Contoh: Rulss|Modders">
-            <button id="duo-btn" onclick="generateFakeFFDuo()">GENERATE</button>
-            <div id="duo-output" class="output-area"></div>
-          </div>
-        </div>`;
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fas fa-users"></i> FAKEFF DUO</h3>
+        <input type="text" id="duo-input" placeholder="Username1|Username2">
+        <button id="duo-btn" onclick="generateFakeFFDuo()">GENERATE</button>
+        <div id="duo-output" class="output-area"></div>
+      </div></div>`;
     }
     async function generateFakeFFDuo() {
       const input = document.getElementById('duo-input').value.trim();
-      const out = document.getElementById('duo-output');
-      const btn = document.getElementById('duo-btn');
+      const out = document.getElementById('duo-output'); const btn = document.getElementById('duo-btn');
       const [u1, u2] = input.split('|').map(v => v.trim());
       if (!u1 || !u2) { out.innerHTML = '<span class="err">Format: Username1|Username2</span>'; return; }
-      out.innerHTML = '<span style="color:#00ffff;">⏳ Lagi generate...</span>';
-      btn.disabled = true;
+      out.innerHTML = '⏳ Lagi generate...'; btn.disabled = true;
       try {
         const res = await fetch(`/api/fakeffduo?username1=${encodeURIComponent(u1)}&username2=${encodeURIComponent(u2)}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}" alt="FakeFF Duo"><br><button class="download-btn" onclick="downloadImage('${url}', 'fakeffduo-${u1}-${u2}.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
-      } catch (e) { out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`; } finally { btn.disabled = false; }
+        const blob = await res.blob(); const url = URL.createObjectURL(blob);
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}"><br><button class="download-btn" onclick="downloadImage('${url}','fakeffduo-${u1}-${u2}.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ ${e.message}</span>`; } finally { btn.disabled = false; }
     }
 
+    // ===== IQC =====
     function modalIQC() {
-      return `
-        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-          <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
-            <h3><i class="fas fa-mobile-screen"></i> IQC GENERATOR</h3>
-            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Bikin quote iPhone aesthetic.</p>
-            <input type="text" id="iqc-text" placeholder="Contoh: halo semuanya!" maxlength="100">
-            <button id="iqc-btn" onclick="generateIQC()">GENERATE</button>
-            <div id="iqc-output" class="output-area"></div>
-          </div>
-        </div>`;
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fas fa-mobile-screen"></i> IQC GENERATOR</h3>
+        <input type="text" id="iqc-text" placeholder="Contoh: halo semuanya!" maxlength="100">
+        <button id="iqc-btn" onclick="generateIQC()">GENERATE</button>
+        <div id="iqc-output" class="output-area"></div>
+      </div></div>`;
     }
     async function generateIQC() {
       const text = document.getElementById('iqc-text').value.trim();
-      const out = document.getElementById('iqc-output');
-      const btn = document.getElementById('iqc-btn');
+      const out = document.getElementById('iqc-output'); const btn = document.getElementById('iqc-btn');
       if (!text) { out.innerHTML = '<span class="err">Teks wajib diisi!</span>'; return; }
-      out.innerHTML = '<span style="color:#00ffff;">⏳ Lagi generate...</span>';
-      btn.disabled = true;
+      out.innerHTML = '⏳ Lagi generate...'; btn.disabled = true;
       try {
         const res = await fetch(`/api/iqc?text=${encodeURIComponent(text)}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}" alt="IQC"><br><button class="download-btn" onclick="downloadImage('${url}', 'iqc.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
-      } catch (e) { out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`; } finally { btn.disabled = false; }
+        const blob = await res.blob(); const url = URL.createObjectURL(blob);
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}"><br><button class="download-btn" onclick="downloadImage('${url}','iqc.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ ${e.message}</span>`; } finally { btn.disabled = false; }
     }
 
+    // ===== PLAY =====
     function modalPlay() {
-      return `
-        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-          <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
-            <h3><i class="fas fa-music"></i> PLAY MUSIC</h3>
-            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Cari lagu favorit lo, nanti langsung bisa diputar.</p>
-            <input type="text" id="play-query" placeholder="Contoh: dj tiktok viral">
-            <button id="play-btn" onclick="generatePlay()">CARI LAGU</button>
-            <div id="play-output" class="output-area"></div>
-          </div>
-        </div>`;
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fas fa-music"></i> PLAY MUSIC</h3>
+        <input type="text" id="play-query" placeholder="Contoh: dj tiktok viral">
+        <button id="play-btn" onclick="generatePlay()">CARI LAGU</button>
+        <div id="play-output" class="output-area"></div>
+      </div></div>`;
     }
     async function generatePlay() {
       const q = document.getElementById('play-query').value.trim();
-      const out = document.getElementById('play-output');
-      const btn = document.getElementById('play-btn');
+      const out = document.getElementById('play-output'); const btn = document.getElementById('play-btn');
       if (!q) { out.innerHTML = '<span class="err">Query wajib diisi!</span>'; return; }
-      out.innerHTML = '<span style="color:#00ffff;">⏳ Lagi mencari lagu...</span>';
-      btn.disabled = true;
+      out.innerHTML = '⏳ Lagi mencari...'; btn.disabled = true;
       try {
         const res = await fetch(`/api/play?q=${encodeURIComponent(q)}`);
         const data = await res.json();
         if (!res.ok || !data.status) throw new Error(data.error || `HTTP ${res.status}`);
-        out.innerHTML = `
-          <div style="text-align:left; padding:10px;">
-            <img src="${data.thumbnail}" style="width:100%; max-width:280px; border-radius:4px; margin:0 auto 10px; display:block;">
-            <p style="color:#00ff66; font-weight:bold; font-size:13px; margin:5px 0;">🎵 ${data.title}</p>
-            <audio controls style="width:100%; margin-top:10px;"><source src="${data.download}" type="audio/mpeg"></audio>
-            <br><a href="${data.download}" download target="_blank" class="download-btn"><i class="fas fa-download"></i> DOWNLOAD MP3</a>
-          </div>`;
-      } catch (e) { out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`; } finally { btn.disabled = false; }
+        out.innerHTML = `<div style="text-align:left;padding:10px;">
+          <img src="${data.thumbnail}" style="width:100%;max-width:280px;border-radius:4px;margin:0 auto 10px;display:block;">
+          <p style="color:#00ff66;font-weight:bold;">🎵 ${data.title}</p>
+          <audio controls style="width:100%;margin-top:10px;"><source src="${data.download}" type="audio/mpeg"></audio>
+          <br><a href="${data.download}" download target="_blank" class="download-btn"><i class="fas fa-download"></i> DOWNLOAD MP3</a>
+        </div>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ ${e.message}</span>`; } finally { btn.disabled = false; }
     }
 
+    // ===== NULIS =====
+    function modalNulis() {
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fas fa-pen-fancy"></i> NULIS</h3>
+        <input type="text" id="nulis-text" placeholder="Contoh: cara membuat indomie">
+        <button id="nulis-btn" onclick="generateNulis()">GENERATE</button>
+        <div id="nulis-output" class="output-area"></div>
+      </div></div>`;
+    }
+    async function generateNulis() {
+      const text = document.getElementById('nulis-text').value.trim();
+      const out = document.getElementById('nulis-output'); const btn = document.getElementById('nulis-btn');
+      if (!text) { out.innerHTML = '<span class="err">Teks wajib diisi!</span>'; return; }
+      out.innerHTML = '⏳ Lagi generate...'; btn.disabled = true;
+      try {
+        const res = await fetch(`/api/nulis?text=${encodeURIComponent(text)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const blob = await res.blob(); const url = URL.createObjectURL(blob);
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}"><br><button class="download-btn" onclick="downloadImage('${url}','nulis.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ ${e.message}</span>`; } finally { btn.disabled = false; }
+    }
+
+    // ===== TIKTOK =====
+    function modalTikTok() {
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fab fa-tiktok"></i> TIKTOK DOWNLOADER</h3>
+        <input type="text" id="tt-url" placeholder="Tempel URL TikTok di sini...">
+        <button id="tt-btn" onclick="generateTikTok()">DOWNLOAD</button>
+        <div id="tt-output" class="output-area"></div>
+      </div></div>`;
+    }
+    async function generateTikTok() {
+      const url = document.getElementById('tt-url').value.trim();
+      const out = document.getElementById('tt-output'); const btn = document.getElementById('tt-btn');
+      if (!url) { out.innerHTML = '<span class="err">URL wajib diisi!</span>'; return; }
+      out.innerHTML = '⏳ Lagi ambil data...'; btn.disabled = true;
+      try {
+        const res = await fetch(`/api/tiktok?url=${encodeURIComponent(url)}`);
+        const data = await res.json();
+        if (!res.ok || !data.status) throw new Error(data.error || `HTTP ${res.status}`);
+        if (data.isSlide) {
+          out.innerHTML = `<span class="ok">✅ Mode Slide (${data.slideImages.length} foto)</span><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px;">` +
+            data.slideImages.map((img, i) => {
+              const u = typeof img === 'object' ? (img.url || img.link) : img;
+              return `<a href="${u}" target="_blank"><img src="${u}" style="width:100%;border-radius:4px;"></a>`;
+            }).join('') + `</div>`;
+        } else if (data.videoUrl) {
+          out.innerHTML = `<span class="ok">✅ Video ditemukan!</span><video src="${data.videoUrl}" controls style="width:100%;margin-top:10px;border-radius:4px;"></video><br><a href="${data.videoUrl}" download class="download-btn"><i class="fas fa-download"></i> DOWNLOAD VIDEO</a>`;
+        } else {
+          throw new Error('Format API tidak dikenali');
+        }
+      } catch (e) { out.innerHTML = `<span class="err">❌ ${e.message}</span>`; } finally { btn.disabled = false; }
+    }
+
+    // ===== FAKESALDO =====
+    function modalFakeSaldo() {
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fas fa-wallet"></i> FAKESALDO</h3>
+        <input type="text" id="fs-nominal" placeholder="Contoh: 150.000">
+        <button id="fs-btn" onclick="generateFakeSaldo()">GENERATE</button>
+        <div id="fs-output" class="output-area"></div>
+      </div></div>`;
+    }
+    async function generateFakeSaldo() {
+      const nominal = document.getElementById('fs-nominal').value.trim();
+      const out = document.getElementById('fs-output'); const btn = document.getElementById('fs-btn');
+      if (!nominal) { out.innerHTML = '<span class="err">Nominal wajib diisi!</span>'; return; }
+      out.innerHTML = '⏳ Lagi generate...'; btn.disabled = true;
+      try {
+        const res = await fetch(`/api/fakesaldo?nominal=${encodeURIComponent(nominal)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const blob = await res.blob(); const url = URL.createObjectURL(blob);
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}"><br><button class="download-btn" onclick="downloadImage('${url}','fakesaldo.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ ${e.message}</span>`; } finally { btn.disabled = false; }
+    }
+
+    // ===== CREATE LOGO =====
+    function modalCreateLogo() {
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fas fa-signature"></i> CREATE LOGO</h3>
+        <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Format: Teks1|Teks2</p>
+        <input type="text" id="logo-input" placeholder="Contoh: rulss|Modds">
+        <button id="logo-btn" onclick="generateCreateLogo()">GENERATE</button>
+        <div id="logo-output" class="output-area"></div>
+      </div></div>`;
+    }
+    async function generateCreateLogo() {
+      const input = document.getElementById('logo-input').value.trim();
+      const out = document.getElementById('logo-output'); const btn = document.getElementById('logo-btn');
+      const [t1, t2] = input.split('|').map(v => v.trim());
+      if (!t1 || !t2) { out.innerHTML = '<span class="err">Format: Teks1|Teks2</span>'; return; }
+      out.innerHTML = '⏳ Lagi generate...'; btn.disabled = true;
+      try {
+        const res = await fetch(`/api/createlogo?text1=${encodeURIComponent(t1)}&text2=${encodeURIComponent(t2)}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const blob = await res.blob(); const url = URL.createObjectURL(blob);
+        out.innerHTML = `<span class="ok">✅ BERHASIL!</span><img src="${url}"><br><button class="download-btn" onclick="downloadImage('${url}','logo-${t1}-${t2}.png')"><i class="fas fa-download"></i> DOWNLOAD</button>`;
+      } catch (e) { out.innerHTML = `<span class="err">❌ ${e.message}</span>`; } finally { btn.disabled = false; }
+    }
+
+    // ===== TEBAK GAMBAR =====
     const tebakBank = [
       { emoji: '🍎', jawaban: 'Apel', opsi: ['Apel', 'Jeruk', 'Mangga', 'Anggur'] },
       { emoji: '🐘', jawaban: 'Gajah', opsi: ['Gajah', 'Badak', 'Kerbau', 'Sapi'] },
       { emoji: '🌋', jawaban: 'Gunung Meletus', opsi: ['Gunung Meletus', 'Pantai', 'Air Terjun', 'Hutan'] },
-      { emoji: '🚀', jawaban: 'Roket', opsi: ['Roket', 'Pesawat', 'Helikopter', 'Balon Udara'] }
+      { emoji: '🚀', jawaban: 'Roket', opsi: ['Roket', 'Pesawat', 'Helikopter', 'Balon Udara'] },
+      { emoji: '🐍', jawaban: 'Ular', opsi: ['Ular', 'Cacing', 'Kadal', 'Buaya'] },
+      { emoji: '🌈', jawaban: 'Pelangi', opsi: ['Pelangi', 'Awan', 'Petir', 'Hujan'] },
+      { emoji: '🐧', jawaban: 'Penguin', opsi: ['Penguin', 'Bebek', 'Angsa', 'Ayam'] },
+      { emoji: '🍕', jawaban: 'Pizza', opsi: ['Pizza', 'Burger', 'Hotdog', 'Sandwich'] },
+      { emoji: '⚽', jawaban: 'Bola Sepak', opsi: ['Bola Sepak', 'Bola Basket', 'Bola Voli', 'Bola Bowling'] },
+      { emoji: '🦁', jawaban: 'Singa', opsi: ['Singa', 'Harimau', 'Macan', 'Cheetah'] }
     ];
     let tebakCurrent = null, tebakSkor = 0, tebakTotal = 0;
 
     function modalTebak() {
-      return `
-        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
-          <div class="modal-box">
-            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
-            <h3><i class="fas fa-image"></i> TEBAK GAMBAR</h3>
-            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Skor: <b id="tebak-skor">0</b> / <b id="tebak-total">0</b></p>
-            <div id="tebak-img" class="tebak-img">?</div>
-            <div id="tebak-options" class="tebak-options"></div>
-            <div id="tebak-output" class="output-area" style="text-align:center;">Pilih jawaban di atas!</div>
-            <button onclick="nextTebak()" style="width:100%;margin-top:10px;">SOAL BERIKUTNYA ➡</button>
-          </div>
-        </div>`;
+      return `<div class="modal-overlay" onclick="if(event.target===this)closeModal()"><div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+        <h3><i class="fas fa-image"></i> TEBAK GAMBAR</h3>
+        <p style="font-size:11px;color:#00aa44;">Skor: <b id="tebak-skor">0</b> / <b id="tebak-total">0</b></p>
+        <div id="tebak-img" class="tebak-img">?</div>
+        <div id="tebak-options" class="tebak-options"></div>
+        <div id="tebak-output" class="output-area">Pilih jawaban di atas!</div>
+        <button onclick="nextTebak()" style="width:100%;margin-top:10px;">SOAL BERIKUTNYA ➡</button>
+      </div></div>`;
     }
     function nextTebak() {
       const pick = tebakBank[Math.floor(Math.random() * tebakBank.length)];
@@ -696,4 +639,4 @@
     }
   </script>
 </body>
-</html>
+                         </html>
