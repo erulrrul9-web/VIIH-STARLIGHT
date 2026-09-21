@@ -5,44 +5,131 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VII-H-STARLIGHT | Cyber Portal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Share Tech Mono', monospace; }
     body {
-      background-color: #000; color: #00ff66; min-height: 100vh;
+      background-color: #030a05; color: #00ff66; min-height: 100vh;
       display: flex; justify-content: center; align-items: center;
-      overflow-x: hidden; position: relative;
+      overflow-x: hidden; position: relative; cursor: crosshair;
     }
-    #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+
+    /* Efek scanlines terminal jadul */
+    body::before {
+      content: " ";
+      display: block;
+      position: fixed;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 999;
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+
+    #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3; }
+    
     .container {
-      position: relative; z-index: 2; display: flex; width: 850px;
-      max-width: 95%; min-height: 480px;
-      background: rgba(5, 15, 5, 0.92);
-      border: 1px solid #00ff66; border-radius: 15px;
-      box-shadow: 0 0 25px #00ff6644; backdrop-filter: blur(5px);
-      overflow: hidden; margin: 20px 0;
+      position: relative; z-index: 2; display: flex; width: 420px;
+      max-width: 95%; background: rgba(0, 20, 10, 0.92);
+      border: 1px solid #00ff66; border-radius: 8px;
+      box-shadow: 0 0 25px rgba(0, 255, 102, 0.3), inset 0 0 15px rgba(0, 255, 102, 0.1);
+      backdrop-filter: blur(5px);
+      overflow: visible; margin: 40px 0 20px 0;
     }
     .hidden { display: none !important; }
 
-    /* Login */
-    .login-section { flex: 1; padding: 45px 35px; display: flex; flex-direction: column; justify-content: center; }
-    .logo h1 { font-size: 26px; color: #00ff66; text-shadow: 0 0 10px #00ff66; }
-    .logo p { font-size: 12px; color: #88ffaa; margin-bottom: 25px; }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; font-size: 12px; margin-bottom: 5px; }
-    .input-field { display: flex; align-items: center; background: rgba(0,30,0,0.7); border: 1px solid #00ff66; border-radius: 5px; padding: 10px; }
-    .input-field i { color: #00ff66; margin-right: 10px; }
-    .input-field input { background: transparent; border: none; outline: none; color: #fff; width: 100%; }
-    .login-btn {
-      width: 100%; padding: 12px; background: #00ff66; color: #000;
-      border: none; border-radius: 5px; font-weight: bold; font-size: 14px;
-      cursor: pointer; box-shadow: 0 0 15px #00ff66; transition: 0.3s; margin-top: 10px;
+    /* Lampu Gantung Interaktif Hacker */
+    .lamp-panel {
+      position: absolute;
+      top: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+      z-index: 10;
     }
-    .login-btn:hover { background: #33ff88; box-shadow: 0 0 25px #00ff66; }
 
-    /* Overlay */
+    .wire {
+      width: 2px;
+      height: 40px;
+      background: #00ff66;
+      box-shadow: 0 0 8px #00ff66;
+    }
+
+    .lamp-head {
+      width: 60px;
+      height: 25px;
+      background: #052610;
+      border: 1px solid #00ff66;
+      border-radius: 0 0 30px 30px;
+      position: relative;
+      box-shadow: 0 0 10px #00ff66;
+    }
+
+    .face-circle {
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle at 38% 32%, #00ff66 0%, #022b12 70%);
+      border-radius: 50%;
+      border: 1px solid #00ff66;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 25px rgba(0, 255, 102, 0.6);
+      margin-top: 5px;
+      transition: transform 0.1s ease-out;
+    }
+
+    .eyes {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .eye {
+      width: 6px;
+      height: 6px;
+      background: #030a05;
+      border-radius: 50%;
+      box-shadow: 0 0 5px #00ff66;
+    }
+
+    .mouth {
+      width: 14px;
+      height: 4px;
+      background: #030a05;
+      border-radius: 2px;
+    }
+
+    /* Login */
+    .login-section { flex: 1; padding: 40px 30px 30px 30px; display: flex; flex-direction: column; justify-content: center; }
+    .logo { text-align: center; margin-bottom: 25px; margin-top: 10px; }
+    .logo h1 { font-size: 22px; color: #00ff66; text-shadow: 0 0 10px #00ff66; letter-spacing: 1px; }
+    .logo p { font-size: 11px; color: #00aa44; margin-top: 5px; }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-size: 12px; margin-bottom: 5px; color: #00cc55; }
+    .input-field { display: flex; align-items: center; background: rgba(1, 15, 5, 0.9); border: 1px solid #00aa44; border-radius: 4px; padding: 10px; transition: 0.3s; }
+    .input-field:focus-within { border-color: #00ff66; box-shadow: 0 0 10px rgba(0, 255, 102, 0.4); }
+    .input-field i { color: #00ff66; margin-right: 10px; font-size: 14px; }
+    .input-field input { background: transparent; border: none; outline: none; color: #00ff66; width: 100%; font-family: 'Share Tech Mono', monospace; font-size: 13px; }
+    .input-field input::placeholder { color: #005522; }
+    
+    .login-btn {
+      width: 100%; padding: 12px; background: #003311; color: #00ff66;
+      border: 1px solid #00ff66; border-radius: 4px; font-weight: bold; font-size: 14px;
+      cursor: pointer; box-shadow: 0 0 10px rgba(0,255,102,0.2); transition: 0.3s; margin-top: 10px;
+      letter-spacing: 1px;
+    }
+    .login-btn:hover { background: #00ff66; color: #030a05; box-shadow: 0 0 20px #00ff66; }
+
+    /* Overlay Loading */
     .hack-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.95); z-index: 999;
+      background: rgba(3,10,5,0.95); z-index: 1000;
       display: flex; justify-content: center; align-items: center;
     }
     .hack-content { text-align: center; width: 320px; }
@@ -50,11 +137,12 @@
       width: 50px; height: 50px; border: 4px solid #003311;
       border-top: 4px solid #00ff66; border-radius: 50%;
       margin: 0 auto 20px; animation: spin 1s linear infinite;
+      box-shadow: 0 0 10px #00ff66;
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .progress-bar {
-      width: 100%; height: 10px; background: #003311;
-      border: 1px solid #00ff66; border-radius: 5px;
+      width: 100%; height: 8px; background: #003311;
+      border: 1px solid #00ff66; border-radius: 4px;
       margin-top: 15px; overflow: hidden;
     }
     .progress-fill {
@@ -62,62 +150,66 @@
       box-shadow: 0 0 10px #00ff66; transition: width 0.1s linear;
     }
 
-    /* Dashboard */
-    .dashboard { flex-direction: column; padding: 30px; }
-    .dashboard-header { border-bottom: 1px solid #00ff6644; padding-bottom: 15px; margin-bottom: 20px; }
+    /* Dashboard Container */
+    .container.dashboard {
+      width: 850px; max-width: 95%; flex-direction: column; padding: 30px;
+    }
+    .dashboard-header { border-bottom: 1px solid rgba(0,255,102,0.3); padding-bottom: 15px; margin-bottom: 20px; }
     .dashboard-header h2 { font-size: 18px; }
     .dashboard-header p { font-size: 12px; color: #88ffaa; margin-top: 5px; }
 
     .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
     .tool-card {
-      padding: 20px; border: 1px solid #00ff66; border-radius: 8px;
-      background: rgba(0,30,0,0.6); text-align: center; transition: 0.3s;
+      padding: 20px; border: 1px solid #00aa44; border-radius: 6px;
+      background: rgba(1, 15, 5, 0.8); text-align: center; transition: 0.3s;
     }
-    .tool-card:hover { box-shadow: 0 0 15px #00ff66; }
-    .tool-card i { font-size: 32px; margin-bottom: 10px; }
-    .tool-card h3 { font-size: 15px; margin-bottom: 8px; }
-    .tool-card p { font-size: 11px; color: #88ffaa; margin-bottom: 15px; }
+    .tool-card:hover { border-color: #00ff66; box-shadow: 0 0 15px rgba(0,255,102,0.3); }
+    .tool-card i { font-size: 28px; margin-bottom: 10px; color: #00ff66; }
+    .tool-card h3 { font-size: 14px; margin-bottom: 6px; color: #00ff66; }
+    .tool-card p { font-size: 11px; color: #00aa44; margin-bottom: 15px; }
     .tool-btn {
       padding: 8px 15px; background: transparent; color: #00ff66;
       border: 1px solid #00ff66; border-radius: 4px;
-      cursor: pointer; font-weight: bold; font-size: 11px;
+      cursor: pointer; font-weight: bold; font-size: 11px; transition: 0.2s;
     }
-    .tool-btn:hover { background: #00ff66; color: #000; }
+    .tool-btn:hover { background: #00ff66; color: #030a05; box-shadow: 0 0 10px #00ff66; }
     .logout-btn {
-      width: 100%; padding: 12px; background: #ff3366; color: #fff;
-      border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+      width: 100%; padding: 12px; background: #330011; color: #ff3366;
+      border: 1px solid #ff3366; border-radius: 4px; cursor: pointer; font-weight: bold;
+      transition: 0.2s;
     }
+    .logout-btn:hover { background: #ff3366; color: #fff; box-shadow: 0 0 15px #ff3366; }
 
     /* Modal */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      position: fixed; inset: 0; background: rgba(3,10,5,0.9);
       z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px;
     }
     .modal-box {
       width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
-      background: rgba(5, 20, 5, 0.98);
-      border: 1px solid #00ff66; border-radius: 12px;
-      box-shadow: 0 0 30px #00ff6644; padding: 25px;
+      background: rgba(1, 20, 8, 0.98);
+      border: 1px solid #00ff66; border-radius: 8px;
+      box-shadow: 0 0 30px rgba(0,255,102,0.3); padding: 25px;
     }
     .modal-box h3 {
-      color: #00ff66; font-size: 18px; margin-bottom: 15px;
-      text-shadow: 0 0 10px #00ff66; border-bottom: 1px solid #00ff6644;
+      color: #00ff66; font-size: 16px; margin-bottom: 15px;
+      text-shadow: 0 0 8px rgba(0,255,102,0.5); border-bottom: 1px solid rgba(0,255,102,0.3);
       padding-bottom: 10px;
     }
     .modal-box input, .modal-box textarea {
       width: 100%; padding: 10px; margin: 6px 0;
-      background: rgba(0,30,0,0.7); border: 1px solid #00ff66;
-      border-radius: 5px; color: #fff; font-family: 'Courier New', monospace;
+      background: rgba(0,15,5,0.8); border: 1px solid #00aa44;
+      border-radius: 4px; color: #00ff66; font-family: 'Share Tech Mono', monospace;
       font-size: 13px; outline: none;
     }
-    .modal-box input::placeholder, .modal-box textarea::placeholder { color: #3a6a3a; }
-    .modal-box input:focus, .modal-box textarea:focus { box-shadow: 0 0 10px #00ff6688; }
+    .modal-box input::placeholder, .modal-box textarea::placeholder { color: #005522; }
+    .modal-box input:focus, .modal-box textarea:focus { border-color: #00ff66; box-shadow: 0 0 10px rgba(0,255,102,0.4); }
     .modal-box button {
-      padding: 10px 20px; background: #00ff66; color: #000;
-      border: none; border-radius: 5px; font-weight: bold;
+      padding: 10px 20px; background: #003311; color: #00ff66;
+      border: 1px solid #00ff66; border-radius: 4px; font-weight: bold;
       cursor: pointer; margin-top: 8px; font-size: 12px; transition: 0.3s;
     }
-    .modal-box button:hover { background: #33ff88; box-shadow: 0 0 15px #00ff66; }
+    .modal-box button:hover { background: #00ff66; color: #030a05; box-shadow: 0 0 15px #00ff66; }
     .modal-box button:disabled { opacity: 0.5; cursor: not-allowed; }
     .modal-close {
       float: right; background: transparent !important; color: #ff3366 !important;
@@ -126,60 +218,51 @@
     }
     .modal-close:hover { background: #ff3366 !important; color: #fff !important; }
     .output-area {
-      margin-top: 15px; padding: 12px; background: rgba(0,0,0,0.6);
-      border: 1px dashed #00ff6655; border-radius: 8px;
+      margin-top: 15px; padding: 12px; background: rgba(0,5,2,0.8);
+      border: 1px dashed rgba(0,255,102,0.4); border-radius: 6px;
       min-height: 40px; font-size: 12px; text-align: center; word-break: break-word;
     }
     .output-area img {
-      max-width: 100%; border-radius: 6px; margin-top: 8px;
-      box-shadow: 0 0 20px #00ff6644;
+      max-width: 100%; border-radius: 4px; margin-top: 8px;
+      box-shadow: 0 0 15px rgba(0,255,102,0.3);
     }
     .err { color: #ff3366; font-weight: bold; }
     .ok { color: #00ff66; font-weight: bold; }
 
-    /* Tombol Download */
     .download-btn {
       display: inline-flex; align-items: center; gap: 8px;
-      margin-top: 12px; padding: 10px 22px;
-      background: linear-gradient(135deg, #00ff66, #00cc55);
-      color: #000 !important; font-weight: bold;
-      border: none; border-radius: 6px; cursor: pointer;
-      font-size: 13px; text-decoration: none;
-      box-shadow: 0 0 15px #00ff6688;
+      margin-top: 12px; padding: 10px 20px;
+      background: #00ff66; color: #030a05 !important; font-weight: bold;
+      border: none; border-radius: 4px; cursor: pointer;
+      font-size: 12px; text-decoration: none;
+      box-shadow: 0 0 15px rgba(0,255,102,0.4);
       transition: 0.3s; width: auto !important;
     }
     .download-btn:hover {
-      transform: translateY(-2px);
       box-shadow: 0 0 25px #00ff66;
-      background: linear-gradient(135deg, #33ff88, #00ff66);
+      background: #33ff88;
     }
 
-    /* Tebak Gambar */
     .tebak-img {
-      width: 100%; max-width: 280px; height: 200px;
-      background: rgba(0,30,0,0.7); border: 1px solid #00ff66;
-      border-radius: 8px; margin: 10px auto;
+      width: 100%; max-width: 280px; height: 180px;
+      background: rgba(0,15,5,0.8); border: 1px solid #00aa44;
+      border-radius: 6px; margin: 10px auto;
       display: flex; align-items: center; justify-content: center;
-      font-size: 60px; box-shadow: 0 0 15px #00ff6644;
-      animation: popIn 0.4s ease;
-    }
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
+      font-size: 50px; box-shadow: 0 0 15px rgba(0,255,102,0.2);
     }
     .tebak-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
     .tebak-opt {
-      padding: 10px; background: rgba(0,30,0,0.6);
-      border: 1px solid #00ff66; color: #00ff66;
-      border-radius: 6px; cursor: pointer;
+      padding: 10px; background: rgba(0,15,5,0.8);
+      border: 1px solid #00aa44; color: #00ff66;
+      border-radius: 4px; cursor: pointer;
       font-weight: bold; font-size: 12px; transition: 0.2s;
     }
-    .tebak-opt:hover { background: #00ff6622; }
-    .tebak-opt.correct { background: #00ff66; color: #000; }
+    .tebak-opt:hover { border-color: #00ff66; background: rgba(0,255,102,0.1); }
+    .tebak-opt.correct { background: #00ff66; color: #030a05; }
     .tebak-opt.wrong { background: #ff3366; color: #fff; border-color: #ff3366; }
 
     @media (max-width: 768px) {
-      .container { flex-direction: column; }
+      .container.dashboard { flex-direction: column; }
       .tools-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -190,38 +273,52 @@
   <div id="hackOverlay" class="hack-overlay hidden">
     <div class="hack-content">
       <div class="spinner"></div>
-      <h2 id="hackStatus">AUTHENTICATING...</h2>
-      <p style="font-size:11px;color:#88ffaa;">SENDING ACCESS VERIFICATION TO WHATSAPP...</p>
+      <h2 id="hackStatus" style="color:#00ff66; font-size:16px;">AUTHENTICATING...</h2>
+      <p style="font-size:11px;color:#00aa44; margin-top:5px;">SENDING ACCESS VERIFICATION TO WHATSAPP...</p>
       <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
     </div>
   </div>
 
+  <!-- Login Screen dengan Lampu Gantung Interaktif -->
   <div id="loginScreen" class="container">
+    <div class="lamp-panel" id="lampPanel">
+      <div class="wire"></div>
+      <div class="lamp-head"></div>
+      <div class="face-circle" id="faceCircle">
+        <div class="eyes">
+          <div class="eye"></div>
+          <div class="eye"></div>
+        </div>
+        <div class="mouth"></div>
+      </div>
+    </div>
+
     <div class="login-section">
       <div class="logo">
-        <h1>VII-H-STARLIGHT</h1>
-        <p>Your Security Portal</p>
+        <h1>// VII-H-STARLIGHT</h1>
+        <p>SECURE TERMINAL ACCESS</p>
       </div>
       <form id="loginForm">
         <div class="form-group">
-          <label>Username / ID</label>
+          <label>&gt; USERNAME / ID</label>
           <div class="input-field">
             <i class="fas fa-user-shield"></i>
-            <input type="text" id="username" placeholder="Masukkan username" required autocomplete="off">
+            <input type="text" id="username" placeholder="root_admin" required autocomplete="off">
           </div>
         </div>
         <div class="form-group">
-          <label>Password</label>
+          <label>&gt; PASSWORD</label>
           <div class="input-field">
             <i class="fas fa-key"></i>
-            <input type="password" id="password" placeholder="Masukkan password" required>
+            <input type="password" id="password" placeholder="••••••••••••" required>
           </div>
         </div>
-        <button type="submit" class="login-btn"><i class="fab fa-whatsapp"></i> LOGIN VIA WHATSAPP</button>
+        <button type="submit" class="login-btn"><i class="fab fa-whatsapp"></i> EXECUTE LOGIN</button>
       </form>
     </div>
   </div>
 
+  <!-- Dashboard Screen -->
   <div id="dashboardScreen" class="container dashboard hidden">
     <div class="dashboard-header">
       <h2><i class="fas fa-terminal"></i> VII-H-STARLIGHT CYBER TOOLS</h2>
@@ -287,6 +384,25 @@
   <script>
     const WA_NUMBER = "628818691107"; // ganti nomor WA lo
 
+    // ====== MOUSE FOLLOWER UNTUK LAMPU HACKER ======
+    const lampPanel = document.getElementById('lampPanel');
+    const faceCircle = document.getElementById('faceCircle');
+
+    document.addEventListener('mousemove', (e) => {
+      if (!lampPanel || !faceCircle) return;
+      const rect = lampPanel.getBoundingClientRect();
+      const lampX = rect.left + rect.width / 2;
+      const lampY = rect.top + rect.height / 2;
+
+      const angle = Math.atan2(e.clientY - lampY, e.clientX - lampX);
+      const distance = Math.min(12, Math.hypot(e.clientX - lampX, e.clientY - lampY) / 15);
+
+      const moveX = Math.cos(angle) * distance;
+      const moveY = Math.sin(angle) * distance;
+
+      faceCircle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    });
+
     // ====== MATRIX RAIN ======
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
@@ -297,7 +413,7 @@
     const columns = canvas.width / fontSize;
     const drops = Array.from({ length: columns }).fill(1);
     function drawMatrix() {
-      ctx.fillStyle = 'rgba(0,0,0,0.05)';
+      ctx.fillStyle = 'rgba(3,10,5,0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#00ff66';
       ctx.font = `${fontSize}px monospace`;
@@ -402,7 +518,7 @@
           <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
             <h3><i class="fas fa-mask"></i> FAKEFF</h3>
-            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Masukkan nickname, hasil bakal muncul di bawah.</p>
+            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Masukkan nickname, hasil bakal muncul di bawah.</p>
             <input type="text" id="ff-nick" placeholder="Contoh: Rulss">
             <button id="ff-btn" onclick="generateFakeFF()">GENERATE</button>
             <div id="ff-output" class="output-area"></div>
@@ -439,7 +555,7 @@
           <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
             <h3><i class="fas fa-users"></i> FAKEFF DUO</h3>
-            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Format: Username1|Username2</p>
+            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Format: Username1|Username2</p>
             <input type="text" id="duo-input" placeholder="Contoh: Rulss|Modders">
             <button id="duo-btn" onclick="generateFakeFFDuo()">GENERATE</button>
             <div id="duo-output" class="output-area"></div>
@@ -477,7 +593,7 @@
           <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
             <h3><i class="fas fa-mobile-screen"></i> IQC GENERATOR</h3>
-            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Bikin quote iPhone aesthetic.</p>
+            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Bikin quote iPhone aesthetic.</p>
             <input type="text" id="iqc-text" placeholder="Contoh: halo semuanya!" maxlength="100">
             <button id="iqc-btn" onclick="generateIQC()">GENERATE</button>
             <div id="iqc-output" class="output-area"></div>
@@ -515,7 +631,7 @@
           <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
             <h3><i class="fas fa-music"></i> PLAY MUSIC</h3>
-            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Cari lagu favorit lo, nanti langsung bisa diputar.</p>
+            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Cari lagu favorit lo, nanti langsung bisa diputar.</p>
             <input type="text" id="play-query" placeholder="Contoh: dj tiktok viral">
             <button id="play-btn" onclick="generatePlay()">CARI LAGU</button>
             <div id="play-output" class="output-area"></div>
@@ -537,9 +653,9 @@
 
         out.innerHTML = `
           <div style="text-align:left; padding:10px;">
-            <img src="${data.thumbnail}" style="width:100%; max-width:280px; border-radius:8px; margin:0 auto 10px; display:block; box-shadow:0 0 15px #00ff6644;">
+            <img src="${data.thumbnail}" style="width:100%; max-width:280px; border-radius:4px; margin:0 auto 10px; display:block; box-shadow:0 0 15px rgba(0,255,102,0.3);">
             <p style="color:#00ff66; font-weight:bold; font-size:13px; margin:5px 0;">🎵 ${escapeHtml(data.title)}</p>
-            <p style="color:#88ffaa; font-size:11px; margin:3px 0;">📺 ${escapeHtml(data.channel)}</p>
+            <p style="color:#00aa44; font-size:11px; margin:3px 0;">📺 ${escapeHtml(data.channel)}</p>
             <audio controls style="width:100%; margin-top:10px;">
               <source src="${data.download}" type="audio/mpeg">
               Browser lo gak support audio.
@@ -582,7 +698,7 @@
           <div class="modal-box">
             <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
             <h3><i class="fas fa-image"></i> TEBAK GAMBAR</h3>
-            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Skor: <b id="tebak-skor">0</b> / <b id="tebak-total">0</b></p>
+            <p style="font-size:11px;color:#00aa44;margin-bottom:8px;">Skor: <b id="tebak-skor">0</b> / <b id="tebak-total">0</b></p>
             <div id="tebak-img" class="tebak-img">?</div>
             <div id="tebak-options" class="tebak-options"></div>
             <div id="tebak-output" class="output-area" style="text-align:center;">Pilih jawaban di atas!</div>
@@ -598,9 +714,6 @@
       document.getElementById('tebak-skor').innerText = tebakSkor;
       document.getElementById('tebak-total').innerText = tebakTotal;
       const imgBox = document.getElementById('tebak-img');
-      imgBox.style.animation = 'none';
-      void imgBox.offsetWidth;
-      imgBox.style.animation = 'popIn 0.4s ease';
       imgBox.innerText = pick.emoji;
       const opts = [...pick.opsi].sort(() => Math.random() - 0.5);
       const container = document.getElementById('tebak-options');
@@ -627,4 +740,4 @@
     }
   </script>
 </body>
-          </html>
+</html>
