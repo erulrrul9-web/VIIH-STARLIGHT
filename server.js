@@ -6,6 +6,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// API KEY GEMINI - taruh di environment variable!
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -175,6 +178,50 @@ app.get('/api/createlogo', async (req, res) => {
         res.set('Content-Type', mime || 'image/png');
         res.send(Buffer.from(response.data));
     } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ====== AI ASSISTANT (GEMINI) ======
+app.post('/api/ai', async (req, res) => {
+    const { message, history } = req.body;
+    if (!message) return res.status(400).json({ error: 'Message wajib diisi' });
+
+    if (!GEMINI_API_KEY) {
+    return res.status(500).json({ error: 'API key Gemini belum di-set di server' });
+}
+
+    try {
+        const systemPrompt = `Kamu adalah asisten VII-H-STARLIGHT yang sopan, gaul, tegas, tapi lucu. Jawab semua pertanyaan dengan benar dan detail. Kamu dirancang oleh VII-H-STARLIGHT Cyber Team.`;
+
+        const contents = [];
+        if (Array.isArray(history)) {
+            history.slice(-6).forEach(h => {
+                contents.push({
+                    role: h.role === 'assistant' ? 'model' : 'user',
+                    parts: [{ text: h.content }]
+                });
+            });
+        }
+        contents.push({ role: 'user', parts: [{ text: message }] });
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const response = await axios.post(url, {
+            contents: contents,
+            systemInstruction: { parts: [{ text: systemPrompt }] }
+        }, {
+            headers: { "Content-Type": "application/json" },
+            timeout: 60000
+        });
+
+        const hasil = response.data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+        if (!hasil) throw new Error('Respon dari AI kosong');
+
+        res.json({ status: true, reply: hasil });
+    } catch (e) {
+        console.error('AI error:', e.message);
+        let errMsg = e.message;
+        if (e.response?.data?.error?.message) errMsg = e.response.data.error.message;
+        res.status(500).json({ error: errMsg });
+    }
 });
 
 module.exports = app;
