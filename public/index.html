@@ -265,6 +265,13 @@
       </div>
 
       <div class="tool-card">
+        <i class="fas fa-music"></i>
+        <h3>Play Music</h3>
+        <p>Cari & dengerin lagu langsung dari web.</p>
+        <button class="tool-btn" onclick="openModal('play')">BUKA TOOL</button>
+      </div>
+
+      <div class="tool-card">
         <i class="fas fa-image"></i>
         <h3>Tebak Gambar</h3>
         <p>Kuis tebak gambar, soal selalu ganti.</p>
@@ -278,7 +285,7 @@
   <div id="modalContainer"></div>
 
   <script>
-    const WA_NUMBER = "6281234567890"; // ganti nomor WA lo
+    const WA_NUMBER = "628818691107"; // ganti nomor WA lo
 
     // ====== MATRIX RAIN ======
     const canvas = document.getElementById('matrixCanvas');
@@ -364,6 +371,7 @@
       if (type === 'fakeff') html = modalFakeFF();
       if (type === 'fakeffduo') html = modalFakeFFDuo();
       if (type === 'iqc') html = modalIQC();
+      if (type === 'play') html = modalPlay();
       if (type === 'tebak') html = modalTebak();
       modalContainer.innerHTML = html;
       if (type === 'tebak') setTimeout(nextTebak, 100);
@@ -498,6 +506,57 @@
       } catch (e) {
         out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`;
       } finally { btn.disabled = false; }
+    }
+
+    // ====== PLAY MUSIC ======
+    function modalPlay() {
+      return `
+        <div class="modal-overlay" onclick="if(event.target===this)closeModal()">
+          <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕ TUTUP</button>
+            <h3><i class="fas fa-music"></i> PLAY MUSIC</h3>
+            <p style="font-size:11px;color:#88ffaa;margin-bottom:8px;">Cari lagu favorit lo, nanti langsung bisa diputar.</p>
+            <input type="text" id="play-query" placeholder="Contoh: dj tiktok viral">
+            <button id="play-btn" onclick="generatePlay()">CARI LAGU</button>
+            <div id="play-output" class="output-area"></div>
+          </div>
+        </div>`;
+    }
+
+    async function generatePlay() {
+      const q = document.getElementById('play-query').value.trim();
+      const out = document.getElementById('play-output');
+      const btn = document.getElementById('play-btn');
+      if (!q) { out.innerHTML = '<span class="err">Query wajib diisi!</span>'; return; }
+      out.innerHTML = '<span style="color:#00ffff;">⏳ Lagi mencari lagu...</span>';
+      btn.disabled = true;
+      try {
+        const res = await fetch(`/api/play?q=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        if (!res.ok || !data.status) throw new Error(data.error || `HTTP ${res.status}`);
+
+        out.innerHTML = `
+          <div style="text-align:left; padding:10px;">
+            <img src="${data.thumbnail}" style="width:100%; max-width:280px; border-radius:8px; margin:0 auto 10px; display:block; box-shadow:0 0 15px #00ff6644;">
+            <p style="color:#00ff66; font-weight:bold; font-size:13px; margin:5px 0;">🎵 ${escapeHtml(data.title)}</p>
+            <p style="color:#88ffaa; font-size:11px; margin:3px 0;">📺 ${escapeHtml(data.channel)}</p>
+            <audio controls style="width:100%; margin-top:10px;">
+              <source src="${data.download}" type="audio/mpeg">
+              Browser lo gak support audio.
+            </audio>
+            <br>
+            <a href="${data.download}" download="${escapeHtml(data.title)}.mp3" target="_blank" class="download-btn" style="text-decoration:none; display:inline-flex;">
+              <i class="fas fa-download"></i> DOWNLOAD MP3
+            </a>
+          </div>
+        `;
+      } catch (e) {
+        out.innerHTML = `<span class="err">❌ Gagal: ${e.message}</span>`;
+      } finally { btn.disabled = false; }
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
     }
 
     // ====== TEBAK GAMBAR ======
